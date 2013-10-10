@@ -154,7 +154,6 @@ def countAminoAcids(seqCodons):
 				#print codon + ' --> ' + aminoAcid
 	#print '----------------------------------'
 	return countAminoAcid #Returns a dictionary
-		
 
 def countVariation(sequences):
 	'''Takes a list of sequences, iterates through them one by one and compares them to 
@@ -235,10 +234,13 @@ def getNonSynonymousPolymorphisms(allSeqCodons):
 	for baseSeqCodons in allSeqCodons: #The first sequence to compare the second to
 		for testSeqCodons in allSeqCodons: #The second sequence to compare the first to
 			if baseSeqCodons != testSeqCodons: #Only if the sequences are different
-				for x in range(len(testSeqCodons)): #Prevent str index out of range errors
+				for x in range(len(baseSeqCodons)): #Prevent str index out of range errors
+					print '%s - %s' % (len(baseSeqCodons), len(testSeqCodons))
 					if baseSeqCodons[x] != testSeqCodons[x]: #Only print if the polymorphism is non-synonymous
 						print '%s: %s -> %s' % (x, baseSeqCodons[x], testSeqCodons[x]) #Prints out the index: 1stAA->2ndAA
-						nonSynPolymorphisms[x: (baseSeqCodons[x],testSeqCodons[x])] #Appends to the dictionary
+						changeAminoAcid = (baseSeqCodons[x], testSeqCodons[x])
+						print changeAminoAcid
+						#nonSynPolymorphisms[x: changeAminoAcid] #Appends to the dictionary
 	return nonSynPolymorphisms #Returns a dictionary
 		
 def iterateFiles(dir):
@@ -250,19 +252,25 @@ def iterateFiles(dir):
 		#print dir + file
 		fileObject = openFile(dir + file) #Opens the file chosen using openFile()
 		sequences = getSequences(fileObject) #Breaks the file down into sequences
-		i = 0
+		#i = 0
+		for sequence in sequences:
+			if len(sequences[0]) != len(sequence):
+				print 'AHH Different sequence lengths in %s' % file
+			#else:
+			#	print 'Same Lengths in %s' % file
+			#print '%s -> %s' % (file, len(sequence))
 		#for sequence in sequences:
 		#	i = i + 1
 		#	countedNucs = countNucs(sequence)
 		#	print '%s - sequence %s --> %s' % (file[9:15], str(i), str(countedNucs[0]))
-		variation = countVariation(sequences) #Works out the variation for each sequence
-		allCodons = getAllCodons(sequences)
+		#variation = countVariation(sequences) #Works out the variation for each sequence
+		#allCodons = getAllCodons(sequences)
 		#print allCodons
-		allAminoAcids = getAllAminoAcids(allCodons)
+		#allAminoAcids = getAllAminoAcids(allCodons)
 		#print allAminoAcids
-		nonSynPoly = getNonSynonymousPolymorphisms(allAminoAcids)
-		if nonSynPoly:
-			print nonSynPoly 
+		#nonSynPoly = getNonSynonymousPolymorphisms(allAminoAcids)
+		#if nonSynPoly:
+		#	print nonSynPoly 
 		#iterateSequences(sequences)
 		#print '-------------------------'
 #		if len(variation)==1: #If only one polymorphism
@@ -285,7 +293,6 @@ def main():
 	#print seqNuc
 	#print seqHeader
 	iterateFiles('/Users/robert/Dropbox/Biomedicine/Yr 3/FYP/Bifidobacterium animalis lactis/') #Calculates for all the files in the bifidobacterium file
-
 	
 if __name__ == '__main__':
 	main()
