@@ -256,9 +256,9 @@ def iterateFiles(dir):
 		for sequence in sequences:
 			if len(sequences[0]) != len(sequence):
 				print 'AHH Different sequence lengths in %s' % file
-			#else:
-			#	print 'Same Lengths in %s' % file
-			#print '%s -> %s' % (file, len(sequence))
+			else:
+				print 'Same Lengths in %s' % file
+			print '%s -> %s' % (file, len(sequence))
 		#for sequence in sequences:
 		#	i = i + 1
 		#	countedNucs = countNucs(sequence)
