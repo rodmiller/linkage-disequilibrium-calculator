@@ -183,7 +183,7 @@ def getAllCodons(sequences):
 	
 def getAllAminoAcids(allCodons):
 	'''Takes a list of list of codons (e.g. [[AGG, GAG...],[TCG, AGC...]]),
-	passes each list to getAminoAcids and appends it to a list.
+	passes each list to getAminoAcids() and appends it to a list.
 	Returns a list of list of Amino Acids
 	'''
 	allAminoAcids = [] #Initiate list to append to
