@@ -51,7 +51,8 @@ aminoAcidCodons = {
 	'Asp':['GAT','GAC'],
 	'Lys':['AAA','AAG'],
 	'Arg':['CGT','CGC','CGA','CGG','AGA','AGG'],
-	'STOP':['TAA','TAG','TGA']
+	'STOP':['TAA','TAG','TGA'],
+	'NONE':['---']
 	}
 
 
@@ -141,11 +142,9 @@ def countAminoAcids(seqCodons):
 	'''Takes a list of codons. It maps each codon against the dictionary of amino acids 
 	and their codons to find the amino acid. It then counts	the occurances and returns
 	 a dictionary in the format amino acid three letter code:number counted'''
-	countAminoAcid = {
-		'Ile':0,'Leu':0,'Val':0,'Phe':0,'Met':0,'Cys':0,'Ala':0,'Gly':0,'Pro':0,'Thr':0,
-		'Ser':0,'Tyr':0,'Trp':0,'Gln':0,'Asn':0,'His':0,'Glu':0,'Asp':0,'Lys':0,'Arg':0,
-		'STOP':0
-		} #Dictionary for counting each type of AA
+	countAminoAcid = {}
+	for aminoAcidCodon in AminoAcidCodons:
+		countAminoAcid[aminoAcidCodon] =  0 #Dictionary for counting each type of AA
 	
 	for codon in seqCodons: #For each codon in the list of codons
 		for aminoAcid in aminoAcidCodons: #For each of the amino acids in the codon dictionary
@@ -155,7 +154,7 @@ def countAminoAcids(seqCodons):
 	#print '----------------------------------'
 	return countAminoAcid #Returns a dictionary
 
-def countVariation(sequences):
+def getVariation(sequences):
 	'''Takes a list of sequences, iterates through them one by one and compares them to 
 	all of the other sequences in turn and finds any differences. It then adds the location
 	of these polymorphisms to a list and returns that.'''
@@ -223,54 +222,56 @@ def calcLinkageDisequilibrium(sequence):
 
 	and P(AB)..etc are the frequencies of the haplotypes (chromosomes) carrying the A and B alleles, and P(A)...etc are the frequencies of the A allele at the A locus. I can describe this in more detail if you need.
 	'''
+	
 
-def getNonSynonymousPolymorphisms(allSeqCodons):
+def getNonSynonymousPolymorphisms(allSeqAA):
 	'''Takes a list of a list of Amino Acids (i.e. [[Gln, Asp...],[Asp, Glu...]]).
 	Then iterates through the lists to compare each sequence to another. 
 	Finds polymorphisms only if non-synonymous and returns a dictionary in the format
 	{polymorphic AA index: (1stAA,2ndAA)} NB value is a tuple.
 	'''	
 	nonSynPolymorphisms = {}
-	for baseSeqCodons in allSeqCodons: #The first sequence to compare the second to
-		for testSeqCodons in allSeqCodons: #The second sequence to compare the first to
-			if baseSeqCodons != testSeqCodons: #Only if the sequences are different
-				for x in range(len(baseSeqCodons)): #Prevent str index out of range errors
-					print '%s - %s' % (len(baseSeqCodons), len(testSeqCodons))
-					if baseSeqCodons[x] != testSeqCodons[x]: #Only print if the polymorphism is non-synonymous
-						print '%s: %s -> %s' % (x, baseSeqCodons[x], testSeqCodons[x]) #Prints out the index: 1stAA->2ndAA
-						changeAminoAcid = (baseSeqCodons[x], testSeqCodons[x])
-						print changeAminoAcid
-						#nonSynPolymorphisms[x: changeAminoAcid] #Appends to the dictionary
+	for baseSeqAA in allSeqAA: #The first sequence to compare the second to
+		for testSeqAA in allSeqAA: #The second sequence to compare the first to
+			if baseSeqAA != testSeqAA: #Only if the sequences are different
+				for x in range(len(testSeqAA)): #Prevent str index out of range errors
+					#print '%s - %s' % (len(baseSeqAA), len(testSeqAA))
+					if baseSeqAA[x] != testSeqAA[x]: #Only print if the polymorphism is non-synonymous
+						#print '%s: %s -> %s' % (x, baseSeqAA[x], testSeqAA[x]) #Prints out the index: 1stAA->2ndAA
+						changeAminoAcid = (baseSeqAA[x], testSeqAA[x])
+						#print changeAminoAcid
+						nonSynPolymorphisms[x] = changeAminoAcid #Appends to the dictionary
 	return nonSynPolymorphisms #Returns a dictionary
 		
 def iterateFiles(dir):
 	'''Takes the path to a directory and iterates over the files in it, passing each one
-	to getSequences() and countVariation(). It then returns a string for the number of
+	to getSequences() and getVariation(). It then returns a string for the number of
 	polymorphisms and their location within the file.'''
 	files = os.listdir(dir) #Lists the files in the supplied dir. 
 	for file in files: #Iterates through each file in the list of files
 		#print dir + file
 		fileObject = openFile(dir + file) #Opens the file chosen using openFile()
+		print 'Now using file ' + file
 		sequences = getSequences(fileObject) #Breaks the file down into sequences
 		#i = 0
-		for sequence in sequences:
-			if len(sequences[0]) != len(sequence):
-				print 'AHH Different sequence lengths in %s' % file
-			else:
-				print 'Same Lengths in %s' % file
-			print '%s -> %s' % (file, len(sequence))
+		#for sequence in sequences:
+		#	if len(sequences[0]) != len(sequence):
+		#		print 'AHH Different sequence lengths in %s' % file
+		#	else:
+		#		print 'Same Lengths in %s' % file
+		#	print '%s -> %s' % (file, len(sequence))
 		#for sequence in sequences:
 		#	i = i + 1
 		#	countedNucs = countNucs(sequence)
 		#	print '%s - sequence %s --> %s' % (file[9:15], str(i), str(countedNucs[0]))
-		#variation = countVariation(sequences) #Works out the variation for each sequence
-		#allCodons = getAllCodons(sequences)
+		#variation = getVariation(sequences) #Works out the variation for each sequence
+		allCodons = getAllCodons(sequences)
 		#print allCodons
-		#allAminoAcids = getAllAminoAcids(allCodons)
+		allAminoAcids = getAllAminoAcids(allCodons)
 		#print allAminoAcids
-		#nonSynPoly = getNonSynonymousPolymorphisms(allAminoAcids)
-		#if nonSynPoly:
-		#	print nonSynPoly 
+		nonSynPoly = getNonSynonymousPolymorphisms(allAminoAcids)
+		if nonSynPoly:
+			print '%s => %s' % (file, nonSynPoly)
 		#iterateSequences(sequences)
 		#print '-------------------------'
 #		if len(variation)==1: #If only one polymorphism
@@ -282,17 +283,27 @@ def iterateFiles(dir):
 		
 def main():
 	if os.name == 'nt': #If on windows, open this tester file
-		fileObject = openFile('F:\USER FILES\Dropbox\Dropbox\Biomedicine\Yr 3\FYP\Bifidobacterium animalis lactis\ortholog_000000.nt_ali.Bifidobacteriumanimalissubsplactis.fasta')
+		fileObject = openFile('F:\USER FILES\Dropbox\Dropbox\Biomedicine\Yr 3\FYP\Bifidobacterium animalis lactis\ortholog_000150.nt_ali.Bifidobacteriumanimalissubsplactis.fasta')
 	elif os.name == 'posix': #If on mac, open this tester file
-		fileObject = openFile('/Users/robert/Dropbox/Biomedicine/Yr 3/FYP/Bifidobacterium animalis lactis/ortholog_000000.nt_ali.Bifidobacteriumanimalissubsplactis.fasta')
-	#sequences = getSequences(fileObject)
-		
+		fileObject = openFile('/Users/robert/Dropbox/Biomedicine/Yr 3/FYP/Bifidobacterium animalis lactis/ortholog_000150.nt_ali.Bifidobacteriumanimalissubsplactis.fasta')
+	sequences = getSequences(fileObject)
+	print sequences
+	for sequence in sequences:
+		print len(sequence)
+	allCodons = getAllCodons(sequences)
+	print allCodons
+	allAminoAcids = getAllAminoAcids(allCodons)
+	print allAminoAcids
+	nonSynPoly = getNonSynonymousPolymorphisms(allAminoAcids)
+	if nonSynPoly:
+		print nonSynPoly	
 	print '-------------------------'
+	#print getNonSynonymousPolymorphisms(allSeqCodons)
 	#print fileObject
-	#print countVariation(sequences)
+	#print getVariation(sequences)
 	#print seqNuc
 	#print seqHeader
-	iterateFiles('/Users/robert/Dropbox/Biomedicine/Yr 3/FYP/Bifidobacterium animalis lactis/') #Calculates for all the files in the bifidobacterium file
+	#iterateFiles('/Users/robert/Dropbox/Biomedicine/Yr 3/FYP/Bifidobacterium animalis lactis/') #Calculates for all the files in the bifidobacterium file
 	
 if __name__ == '__main__':
 	main()
