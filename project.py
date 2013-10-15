@@ -167,7 +167,7 @@ def getVariation(sequences):
 				if sequence[x] != baseSequence[x]: #Not equal == polymorphism
 					#print 'Polymorphism at index %s between sequence %s and sequence %s' % (str(x), sequences.index(sequence), sequences.index(baseSequence))
 					if x not in polymorphismIndexes: #If the polymorphism location is already noted then no point adding it again
-						polymorphismIndexes.append(x)
+						polymorphismIndexes.append(x) #Adds it to a list of the polymorphism indexes in the file
 	return polymorphismIndexes #Returns a list of the indexes of the polymorphisms
 
 def getAllCodons(sequences):
@@ -233,7 +233,7 @@ def getNonSynonymousPolymorphisms(allSeqAA):
 	nonSynPolymorphisms = {}
 	for baseSeqAA in allSeqAA: #The first sequence to compare the second to
 		for testSeqAA in allSeqAA: #The second sequence to compare the first to
-			if baseSeqAA != testSeqAA: #Only if the sequences are different
+			if baseSeqAA != testSeqAA: #Only if the Amino Acids are different
 				for x in range(len(testSeqAA)): #Prevent str index out of range errors
 					#print '%s - %s' % (len(baseSeqAA), len(testSeqAA))
 					if baseSeqAA[x] != testSeqAA[x]: #Only print if the polymorphism is non-synonymous
@@ -242,6 +242,30 @@ def getNonSynonymousPolymorphisms(allSeqAA):
 						#print changeAminoAcid
 						nonSynPolymorphisms[x] = changeAminoAcid #Appends to the dictionary
 	return nonSynPolymorphisms #Returns a dictionary
+
+def getSynonymousPolymorphisms(allSeqCodons):
+	'''Takes a list of a list of codons (i.e. [[AGC, TAG...],[TGC, CGT...]])
+	then iterates through the list comparing each list of codons to another. 
+	It finds if the codons are different then compares them to the amino acid dictionary
+	to ensure they code for the same AA and returns only Synonymous Polymorphisms.
+	Returns a dictionary in the format {polymorphic codon index: (1st Codon, 2nd Codon)}
+	'''
+	synPolymorphisms = {} #Initialise the dictionary
+	for baseSeqCodons in allSeqCodons: #The first codons to compare the others to
+		for testSeqCodons in allSeqCodons: #The codons to compare the first to
+			for x in range(len(baseSeqCodons)): #Iterate through the list of codons using x to maintain the same index
+				if baseSeqCodons[x] != testSeqCodons[x]: #Only if the codons are different
+					#print baseSeqCodons[x] + ' ' + testSeqCodons[x]
+					for aminoAcid in aminoAcidCodons: #Iterate through the dictionary to find the AA the codon codes for
+						#print aminoAcid
+						if baseSeqCodons[x] in aminoAcidCodons[aminoAcid]:
+							#print 'Found an AA for base codon'
+							#print aminoAcid
+							baseSeqCodonAA = aminoAcid
+							if testSeqCodons[x] in aminoAcidCodons[aminoAcid]: #The codon represents an amino acid and the two codons represent the same one
+								#print 'Found the same codon, its ' + aminoAcid
+								synPolymorphisms[x] = (baseSeqCodons[x], testSeqCodons[x]) #Append it to the dictionary
+	return synPolymorphisms	
 		
 def iterateFiles(dir):
 	'''Takes the path to a directory and iterates over the files in it, passing each one
@@ -251,29 +275,21 @@ def iterateFiles(dir):
 	for file in files: #Iterates through each file in the list of files
 		#print dir + file
 		fileObject = openFile(dir + file) #Opens the file chosen using openFile()
-		print 'Now using file ' + file
 		sequences = getSequences(fileObject) #Breaks the file down into sequences
-		#i = 0
-		#for sequence in sequences:
-		#	if len(sequences[0]) != len(sequence):
-		#		print 'AHH Different sequence lengths in %s' % file
-		#	else:
-		#		print 'Same Lengths in %s' % file
-		#	print '%s -> %s' % (file, len(sequence))
-		#for sequence in sequences:
-		#	i = i + 1
-		#	countedNucs = countNucs(sequence)
-		#	print '%s - sequence %s --> %s' % (file[9:15], str(i), str(countedNucs[0]))
-		#variation = getVariation(sequences) #Works out the variation for each sequence
+		variation = getVariation(sequences) #Works out the variation for each sequence
+		#print variation
 		allCodons = getAllCodons(sequences)
 		#print allCodons
 		allAminoAcids = getAllAminoAcids(allCodons)
 		#print allAminoAcids
 		nonSynPoly = getNonSynonymousPolymorphisms(allAminoAcids)
-		if nonSynPoly:
-			print '%s => %s' % (file, nonSynPoly)
-		#iterateSequences(sequences)
-		#print '-------------------------'
+		synPoly = getSynonymousPolymorphisms(allCodons)
+		if variation:
+			print '-------------------------'
+			print '%s =>' % file
+			print 'Variation: %s' % variation
+			print 'nonSynPoly: %s' % nonSynPoly
+			print 'synPoly: %s' % synPoly
 #		if len(variation)==1: #If only one polymorphism
 #			print '%s --> %s polymorphism. Location is: %s' % (file[9:15], len(variation), str(variation))
 ##		elif len(variation)==0: #If no polymorphisms. Comment out to not list all the uninteresting non-polymorphic files
@@ -282,28 +298,30 @@ def iterateFiles(dir):
 #			print '%s --> %s polymorphisms. Locations are: %s' % (file[9:15], len(variation), str(variation))
 		
 def main():
-	if os.name == 'nt': #If on windows, open this tester file
-		fileObject = openFile('F:\USER FILES\Dropbox\Dropbox\Biomedicine\Yr 3\FYP\Bifidobacterium animalis lactis\ortholog_000150.nt_ali.Bifidobacteriumanimalissubsplactis.fasta')
-	elif os.name == 'posix': #If on mac, open this tester file
-		fileObject = openFile('/Users/robert/Dropbox/Biomedicine/Yr 3/FYP/Bifidobacterium animalis lactis/ortholog_000150.nt_ali.Bifidobacteriumanimalissubsplactis.fasta')
-	sequences = getSequences(fileObject)
-	print sequences
-	for sequence in sequences:
-		print len(sequence)
-	allCodons = getAllCodons(sequences)
-	print allCodons
-	allAminoAcids = getAllAminoAcids(allCodons)
-	print allAminoAcids
-	nonSynPoly = getNonSynonymousPolymorphisms(allAminoAcids)
-	if nonSynPoly:
-		print nonSynPoly	
-	print '-------------------------'
+	#if os.name == 'nt': #If on windows, open this tester file
+	#	fileObject = openFile('F:\USER FILES\Dropbox\Dropbox\Biomedicine\Yr 3\FYP\Bifidobacterium animalis lactis\ortholog_000506.nt_ali.Bifidobacteriumanimalissubsplactis.fasta')
+	#elif os.name == 'posix': #If on mac, open this tester file
+	#	fileObject = openFile('/Users/robert/Dropbox/Biomedicine/Yr 3/FYP/Bifidobacterium animalis lactis/ortholog_000506.nt_ali.Bifidobacteriumanimalissubsplactis.fasta')
+	#sequences = getSequences(fileObject)
+	#print sequences
+	#for sequence in sequences:
+	#	print len(sequence)
+	#allCodons = getAllCodons(sequences)
+	#print allCodons
+	#allAminoAcids = getAllAminoAcids(allCodons)
+	#print allAminoAcids
+	#nonSynPoly = getNonSynonymousPolymorphisms(allAminoAcids)
+	#if nonSynPoly:
+	#print nonSynPoly	
+	#print '-------------------------'
+	#synPoly = getSynonymousPolymorphisms(allCodons)
+	#print synPoly
 	#print getNonSynonymousPolymorphisms(allSeqCodons)
 	#print fileObject
 	#print getVariation(sequences)
 	#print seqNuc
 	#print seqHeader
-	#iterateFiles('/Users/robert/Dropbox/Biomedicine/Yr 3/FYP/Bifidobacterium animalis lactis/') #Calculates for all the files in the bifidobacterium file
+	iterateFiles('/Users/robert/Dropbox/Biomedicine/Yr 3/FYP/Bifidobacterium animalis lactis/') #Calculates for all the files in the bifidobacterium file
 	
 if __name__ == '__main__':
 	main()
