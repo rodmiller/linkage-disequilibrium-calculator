@@ -1,0 +1,230 @@
+-------------------------
+ortholog_000069.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [1715]
+nonSynPoly: {}
+synPoly: {571: ('CTG', 'CTA')}
+-------------------------
+ortholog_000081.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [221]
+nonSynPoly: {}
+synPoly: {73: ('GTG', 'GTA')}
+-------------------------
+ortholog_000117.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [121]
+nonSynPoly: {40: ('Val', 'Ala')}
+synPoly: {}
+-------------------------
+ortholog_000150.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [0, 1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71]
+nonSynPoly: {0: ('Met', 'Arg'), 1: ('Asp', 'His'), 2: ('NONE', 'Ser'), 3: ('NONE', 'Gly'), 4: ('NONE', 'Ser'), 5: ('NONE', 'Pro'), 6: ('NONE', 'Pro'), 7: ('NONE', 'Lys'), 8: ('NONE', 'Met'), 9: ('NONE', 'Ile'), 10: ('NONE', 'His'), 11: ('NONE', 'Trp'), 12: ('NONE', 'Ser'), 13: ('NONE', 'Ala'), 14: ('NONE', 'Val'), 15: ('NONE', 'Ile'), 16: ('NONE', 'Ile'), 17: ('NONE', 'Ser'), 18: ('NONE', 'Thr'), 19: ('NONE', 'Gly'), 20: ('NONE', 'Gly'), 21: ('NONE', 'Val'), 22: ('NONE', 'Met'), 23: ('NONE', 'Asp')}
+synPoly: {}
+-------------------------
+ortholog_000197.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [181]
+nonSynPoly: {60: ('Arg', 'Gln')}
+synPoly: {}
+-------------------------
+ortholog_000268.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [358]
+nonSynPoly: {119: ('Ala', 'Val')}
+synPoly: {}
+-------------------------
+ortholog_000281.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [453]
+nonSynPoly: {151: ('Ala', 'Ser')}
+synPoly: {}
+-------------------------
+ortholog_000293.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [825]
+nonSynPoly: {275: ('Arg', 'Trp')}
+synPoly: {}
+-------------------------
+ortholog_000305.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [1633, 1634, 1635, 1636, 1637, 1638, 1639, 1640, 1641, 1642, 1643, 1644, 1645, 1646, 1647, 1648, 1649, 1650, 1651, 1652, 1653, 1654, 1655, 1656, 1657, 1658, 1659, 1660, 1661, 1662, 1663, 1664, 1665, 1666, 1668, 1669, 1670, 1671, 1672, 1673, 1674, 1676, 1677, 1678, 1679, 1680, 1681, 1682]
+nonSynPoly: {544: ('Leu', 'Cys'), 545: ('NONE', 'Thr'), 546: ('NONE', 'Ala'), 547: ('NONE', 'Ser'), 548: ('NONE', 'Ser'), 549: ('NONE', 'Arg'), 550: ('NONE', 'Ala'), 551: ('NONE', 'Ser'), 552: ('NONE', 'Ser'), 553: ('NONE', 'Gly'), 554: ('NONE', 'Ile'), 555: ('His', 'Cys'), 556: ('Arg', 'Thr'), 557: ('Lys', 'Arg'), 558: ('Leu', 'Ile'), 559: ('Thr', 'Val'), 560: ('Arg', 'Ala')}
+synPoly: {}
+-------------------------
+ortholog_000315.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [405]
+nonSynPoly: {135: ('His', 'Tyr')}
+synPoly: {}
+-------------------------
+ortholog_000347.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [1600]
+nonSynPoly: {533: ('Ala', 'Val')}
+synPoly: {}
+-------------------------
+ortholog_000365.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [728]
+nonSynPoly: {}
+synPoly: {242: ('GCG', 'GCA')}
+-------------------------
+ortholog_000370.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [376, 780]
+nonSynPoly: {260: ('Val', 'Phe'), 125: ('Arg', 'Pro')}
+synPoly: {}
+-------------------------
+ortholog_000383.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [1223]
+nonSynPoly: {}
+synPoly: {407: ('GCC', 'GCT')}
+-------------------------
+ortholog_000397.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [23, 152, 203]
+nonSynPoly: {}
+synPoly: {50: ('GAT', 'GAC'), 67: ('ATT', 'ATA'), 7: ('GAT', 'GAC')}
+-------------------------
+ortholog_000400.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [450]
+nonSynPoly: {150: ('Pro', 'Ser')}
+synPoly: {}
+-------------------------
+ortholog_000408.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [521]
+nonSynPoly: {}
+synPoly: {173: ('TTC', 'TTT')}
+-------------------------
+ortholog_000409.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [781]
+nonSynPoly: {260: ('Lys', 'Thr')}
+synPoly: {}
+-------------------------
+ortholog_000428.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [538]
+nonSynPoly: {179: ('Lys', 'Arg')}
+synPoly: {}
+-------------------------
+ortholog_000439.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [673]
+nonSynPoly: {224: ('Leu', 'Arg')}
+synPoly: {}
+-------------------------
+ortholog_000478.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [905]
+nonSynPoly: {}
+synPoly: {301: ('CGC', 'CGA')}
+-------------------------
+ortholog_000489.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [1542, 1543]
+nonSynPoly: {514: ('Ile', 'Tyr')}
+synPoly: {}
+-------------------------
+ortholog_000506.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [41]
+nonSynPoly: {}
+synPoly: {13: ('GCC', 'GCT')}
+-------------------------
+ortholog_000526.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [1136]
+nonSynPoly: {}
+synPoly: {378: ('GCC', 'GCA')}
+-------------------------
+ortholog_000544.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [537]
+nonSynPoly: {179: ('Pro', 'Ser')}
+synPoly: {}
+-------------------------
+ortholog_000559.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [0, 3, 4, 5, 7, 8, 9, 10, 11, 12, 14, 15, 17, 18, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 68, 71]
+nonSynPoly: {0: ('Met', 'Leu'), 1: ('Thr', 'Leu'), 2: ('Ile', 'Thr'), 3: ('Pro', 'Trp'), 4: ('Thr', 'Ser'), 5: ('Ser', 'Pro'), 6: ('Ile', 'Leu'), 7: ('Ser', 'His'), 8: ('NONE', 'Arg'), 9: ('NONE', 'His'), 10: ('NONE', 'Asp'), 11: ('NONE', 'Trp'), 12: ('NONE', 'Arg'), 13: ('NONE', 'Ile'), 14: ('NONE', 'His'), 15: ('NONE', 'Asp'), 16: ('NONE', 'His'), 17: ('NONE', 'Ser'), 18: ('NONE', 'His'), 19: ('NONE', 'Ile'), 20: ('NONE', 'His'), 21: ('NONE', 'Leu')}
+synPoly: {22: ('GGT', 'GGG'), 23: ('TTC', 'TTT')}
+-------------------------
+ortholog_000567.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [2326, 4335]
+nonSynPoly: {1445: ('Thr', 'Ala'), 775: ('Ala', 'Val')}
+synPoly: {}
+-------------------------
+ortholog_000594.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [710]
+nonSynPoly: {}
+synPoly: {236: ('GTA', 'GTT')}
+-------------------------
+ortholog_000611.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [1169]
+nonSynPoly: {}
+synPoly: {389: ('GAG', 'GAA')}
+-------------------------
+ortholog_000626.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+nonSynPoly: {0: ('Met', 'Pro'), 1: ('NONE', 'Ile'), 2: ('NONE', 'Leu'), 3: ('NONE', 'Arg'), 4: ('NONE', 'Asn'), 5: ('NONE', 'Val'), 6: ('NONE', 'Met')}
+synPoly: {}
+-------------------------
+ortholog_000632.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [364]
+nonSynPoly: {121: ('Val', 'Glu')}
+synPoly: {}
+-------------------------
+ortholog_000637.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [2906, 2907, 2908, 2909, 2914, 2917, 2918, 2919, 2920, 2922, 2924, 2925, 2926, 2927, 2928, 2930, 2931, 2932, 2933, 2934, 2935, 2936, 2937, 2938, 2939, 2940, 2941, 2942, 2943, 2944, 2945, 2946, 2947, 2948, 2949, 2950, 2951, 2952, 2953, 2954, 2955, 2956, 2957, 2958, 2959, 2960, 2961, 2962, 2963, 2964, 2965, 2966, 2967, 2968, 2969, 2970, 2971, 2972, 2973, 2974, 2975, 2976, 2977, 2978, 2979, 2980, 2981, 2982, 2983, 2984, 2985, 2986, 2987, 2988, 2989, 2990, 2991, 2992, 2993, 2994, 2995, 2996, 2997, 2999, 3000, 3001, 3002, 3003, 3005, 3006, 3008, 3009, 3010, 3011, 3012, 3014, 3017, 3021, 3025, 3026, 3027, 3029, 3030, 3033, 3035, 3037, 3038, 3041, 3042, 3043, 3044, 3045, 3046, 3047, 3048, 3049, 3050, 3051, 3052, 3053, 3054, 3055, 3056, 3057, 3058, 3059, 3060, 3061, 3062, 3063, 3064, 3065, 3066, 3067, 3068, 3072, 3073, 3074, 3075, 3076, 3077, 3078, 3080, 3082, 3083, 3084, 3085, 3086, 3087, 3088, 3089, 3090, 3091, 3094, 3095, 3097, 3098, 3099, 3101, 3102, 3103, 3104, 3105, 3106, 3107, 3111, 3112, 3113, 3114, 3115, 3116, 3117, 3118, 3119, 3120, 3121, 3122, 3124, 3128, 3129, 3131, 3132, 3134, 3136, 3137, 3138, 3140, 3141, 3142, 3144, 3146, 3148, 3149, 3150, 3151, 3152, 3153, 3155, 3157, 3159, 3166, 3167, 3168, 3170, 3171, 3172, 3173, 3176, 3177, 3179]
+nonSynPoly: {1024: ('Arg', 'Pro'), 1025: ('Ile', 'Asp'), 1026: ('Ala', 'Pro'), 1027: ('Trp', 'Tyr'), 1028: ('Leu', 'Ala'), 1029: ('Trp', 'His'), 1030: ('Cys', 'Leu'), 1031: ('Leu', 'Arg'), 1032: ('Gly', 'Ala'), 1033: ('Ile', 'Val'), 1034: ('Ile', 'Cys'), 1035: ('Val', 'Arg'), 1037: ('NONE', 'Arg'), 1038: ('NONE', 'Gly'), 1039: ('NONE', 'His'), 1040: ('NONE', 'Arg'), 1041: ('Leu', 'Arg'), 1043: ('Cys', 'Arg'), 1044: ('Ile', 'Leu'), 1045: ('Val', 'Glu'), 1046: ('Ala', 'Pro'), 1047: ('Ile', 'Ala'), 1048: ('Pro', 'Ala'), 1049: ('Arg', 'Pro'), 1050: ('Thr', 'Glu'), 1051: ('His', 'Glu'), 1052: ('Ala', 'Gly'), 1053: ('Ser', 'Arg'), 1055: ('Asn', 'Ser'), 1056: ('Glu', 'Gln'), 1057: ('Glu', 'Pro'), 1058: ('Glu', 'Asp'), 1059: ('Ala', 'Pro'), 968: ('Ser', 'Arg'), 969: ('Gly', 'Thr'), 971: ('Arg', 'Leu'), 972: ('Ala', 'Glu'), 973: ('Ser', 'Asp'), 974: ('Ala', 'Pro'), 975: ('Gln', 'Thr'), 977: ('Leu', 'NONE'), 978: ('Ala', 'NONE'), 979: ('Asn', 'NONE'), 980: ('Ile', 'NONE'), 981: ('Thr', 'NONE'), 982: ('Ser', 'NONE'), 983: ('Cys', 'NONE'), 984: ('Ser', 'NONE'), 985: ('Gly', 'NONE'), 986: ('Val', 'NONE'), 987: ('Gln', 'NONE'), 988: ('Ser', 'NONE'), 989: ('Val', 'NONE'), 990: ('Val', 'NONE'), 991: ('Ser', 'NONE'), 992: ('Asn', 'NONE'), 993: ('Ala', 'NONE'), 994: ('Lys', 'NONE'), 995: ('Gly', 'NONE'), 996: ('Thr', 'NONE'), 997: ('Tyr', 'NONE'), 998: ('Tyr', 'NONE'), 999: ('Arg', 'Gly'), 1000: ('Phe', 'His'), 1001: ('Thr', 'Pro'), 1003: ('Asn', 'Arg'), 1004: ('Pro', 'Ser'), 1007: ('Glu', 'Gln'), 1008: ('Gln', 'Pro'), 1009: ('His', 'Glu'), 1010: ('Ile', 'Val'), 1011: ('Asp', 'Gln'), 1012: ('Asp', 'Gly'), 1014: ('Gly', 'NONE'), 1015: ('Ile', 'NONE'), 1016: ('Val', 'NONE'), 1017: ('Glu', 'NONE'), 1018: ('Gln', 'NONE'), 1019: ('Ser', 'NONE'), 1020: ('His', 'NONE'), 1021: ('Asn', 'NONE'), 1022: ('Pro', 'NONE')}
+synPoly: {976: ('TTG', 'CTT'), 1002: ('TTG', 'CTT'), 1042: ('TAT', 'TAC'), 1005: ('CCC', 'CCT'), 1013: ('GCC', 'GCG')}
+-------------------------
+ortholog_000640.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [223, 225]
+nonSynPoly: {74: ('Leu', 'Trp'), 75: ('Lys', 'Glu')}
+synPoly: {}
+-------------------------
+ortholog_000675.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [537, 538, 539, 628]
+nonSynPoly: {209: ('Ala', 'Val'), 179: ('His', 'Ala')}
+synPoly: {}
+-------------------------
+ortholog_000697.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [328]
+nonSynPoly: {109: ('Pro', 'Arg')}
+synPoly: {}
+-------------------------
+ortholog_000701.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [564, 1646, 1648, 1649, 1650, 1651, 1653, 1654, 1655, 1658, 1659, 1660, 1661, 1663, 1665, 1666, 1667, 1668, 1669, 1670, 1671, 1672, 1673, 1674, 1676, 1678, 1679, 1680, 1681, 1682, 1683, 1685, 1686, 1687, 1689, 1690, 1691, 1692, 1693, 1695, 1696, 1697, 1698, 1699, 1700, 1701, 1702, 1703, 1705, 1706, 1711, 1712, 1776, 1777, 1778, 1780, 1781, 1782, 1783, 1785, 1786, 1788, 1789, 1790, 1791, 1792, 1793, 1794, 1795, 1796, 1798, 1800, 1801, 1802, 1803, 1805, 1806, 1808, 1809, 1810, 1811, 1812, 1813, 1815, 1822, 1823, 1867, 1868, 2137]
+nonSynPoly: {549: ('Ala', 'Gly'), 550: ('Leu', 'Ala'), 551: ('Val', 'Cys'), 553: ('Val', 'Ser'), 554: ('Ala', 'Gly'), 555: ('Asp', 'Arg'), 556: ('Asp', 'Arg'), 557: ('Leu', 'Ser'), 558: ('Asn', 'Gln'), 559: ('Leu', 'Pro'), 560: ('Leu', 'Ala'), 561: ('Asn', 'Glu'), 562: ('Ala', 'Cys'), 563: ('Asp', 'Arg'), 564: ('Ala', 'Arg'), 565: ('Val', 'Arg'), 566: ('Leu', 'Ala'), 567: ('Ala', 'Arg'), 568: ('Ala', 'Gly'), 570: ('Gly', 'Ala'), 188: ('Leu', 'Phe'), 712: ('Val', 'Ala'), 592: ('Val', 'NONE'), 593: ('Ala', 'Glu'), 594: ('Glu', 'Pro'), 595: ('Glu', 'Arg'), 596: ('Ala', 'Arg'), 597: ('Glu', 'Arg'), 598: ('Gln', 'Ala'), 599: ('Glu', 'Gly'), 600: ('Leu', 'Thr'), 602: ('Pro', 'Ala'), 603: ('Leu', 'Ala'), 604: ('Arg', 'Ala'), 605: ('Pro', 'Ala'), 607: ('Gln', 'Arg'), 622: ('Gly', 'Ala')}
+synPoly: {552: ('GGA', 'GGG'), 601: ('TTG', 'CTT'), 548: ('GAG', 'GAA')}
+-------------------------
+ortholog_000704.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [1192]
+nonSynPoly: {397: ('Val', 'Ala')}
+synPoly: {}
+-------------------------
+ortholog_000716.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [521]
+nonSynPoly: {}
+synPoly: {173: ('ACC', 'ACT')}
+-------------------------
+ortholog_000728.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [608]
+nonSynPoly: {}
+synPoly: {202: ('GAT', 'GAC')}
+-------------------------
+ortholog_000886.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [811]
+nonSynPoly: {270: ('Ala', 'Val')}
+synPoly: {}
+-------------------------
+ortholog_000889.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [266]
+nonSynPoly: {}
+synPoly: {88: ('CAC', 'CAT')}
+-------------------------
+ortholog_000893.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65]
+nonSynPoly: {0: ('Arg', 'Met'), 1: ('Gly', 'Ala'), 2: ('Glu', 'NONE'), 3: ('Glu', 'NONE'), 4: ('Arg', 'NONE'), 5: ('Gly', 'NONE'), 6: ('Thr', 'NONE'), 7: ('Glu', 'NONE'), 8: ('Arg', 'NONE'), 9: ('Arg', 'NONE'), 10: ('Arg', 'NONE'), 11: ('Tyr', 'NONE'), 12: ('Arg', 'NONE'), 13: ('Lys', 'NONE'), 14: ('Arg', 'NONE'), 15: ('Asp', 'NONE'), 16: ('Glu', 'NONE'), 17: ('Glu', 'NONE'), 18: ('Met', 'NONE'), 19: ('Asn', 'NONE'), 20: ('Met', 'NONE'), 21: ('Ala', 'NONE')}
+synPoly: {}
+-------------------------
+ortholog_000899.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [0, 1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+nonSynPoly: {0: ('Val', 'Lys'), 1: ('Gln', 'Arg'), 2: ('NONE', 'Ala'), 3: ('NONE', 'Val'), 4: ('NONE', 'Gln')}
+synPoly: {}
+-------------------------
+ortholog_000912.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [128, 134, 150]
+nonSynPoly: {42: ('Asp', 'Glu'), 50: ('Leu', 'Val')}
+synPoly: {44: ('GGC', 'GGG')}
+-------------------------
+ortholog_000978.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [2118, 2119, 2120, 2121, 2122, 2123, 2124, 2125, 2126, 2127, 2128, 2129, 2130, 2131, 2132, 2133, 2134, 2135, 2136, 2137, 2138, 2139, 2140, 2141, 2142, 2143, 2144, 2157, 2158, 2159, 2160, 2161, 2162, 2166, 2167, 2168, 2169, 2170, 2171, 2174, 2175, 2177, 2178, 2180, 2181, 2184, 2185, 2186, 2187, 2188, 2189, 2190, 2191, 2192, 2193, 2194, 2195, 2196, 2197, 2198, 2199, 2200, 2201, 2202, 2203, 2204, 2205, 2207, 2210, 2213, 2214, 2215, 2216, 2217, 2218, 2219, 2220, 2221, 2222, 2223, 2226, 2227, 2229, 2230, 2234, 2235, 2236, 2237, 2238, 2240, 2243, 2244, 2245, 2246, 2247, 2249, 2250, 2251, 2252, 2253, 2256, 2257, 2258, 2259, 2260, 2261, 2262, 2263, 2264, 2265, 2266, 2267, 2268, 2269, 2270, 2271, 2272, 2273, 2274, 2275, 2276, 2277, 2278, 2279, 2280, 2282, 2287, 2288, 2289, 2290, 2291, 2292, 2293, 2305, 2306, 2307, 2308, 2309, 2312, 2314, 2318, 2319, 2321, 2324, 2327, 2328, 2329, 2330, 2331, 2332, 2333, 2334, 2335, 2336, 2337, 2338, 2339, 2340, 2341, 2342, 2343, 2344, 2345, 2346, 2347, 2351, 2352, 2353, 2355, 2356, 2357, 2360, 2361, 2363, 2364, 2365, 2366, 2397, 2399, 2401, 2403, 2404, 2405, 2406, 2407, 2408, 2409, 2410, 2411, 2412, 2413, 2414, 2415, 2416, 2417, 2418, 2419, 2420, 2421, 2422, 2423, 2424, 2425, 2426, 2427, 2428, 2429, 2430, 2431, 2432, 2433, 2434, 2435, 2436, 2437, 2438, 2439, 2440, 2441, 2442, 2443, 2444, 2445, 2446, 2447, 2448, 2449, 2450, 2451, 2452, 2453, 2454, 2455, 2456, 2459, 2460, 2463, 2464, 2465, 2466, 2469, 2470, 2471, 2472, 2473, 2474, 2475, 2476, 2477, 2478, 2479, 2480, 2481, 2482]
+nonSynPoly: {706: ('Pro', 'NONE'), 707: ('Trp', 'NONE'), 708: ('Ser', 'NONE'), 709: ('Arg', 'NONE'), 710: ('Leu', 'NONE'), 711: ('Asp', 'NONE'), 712: ('Ser', 'NONE'), 713: ('Val', 'NONE'), 714: ('Leu', 'NONE'), 719: ('Leu', 'NONE'), 720: ('Leu', 'NONE'), 722: ('Gly', 'Leu'), 723: ('Ser', 'Glu'), 725: ('Thr', 'Ala'), 726: ('Gly', 'Arg'), 727: ('Ile', 'Leu'), 728: ('Asn', 'Arg'), 729: ('Gly', 'NONE'), 730: ('Leu', 'NONE'), 731: ('Trp', 'NONE'), 732: ('Leu', 'NONE'), 733: ('Ala', 'NONE'), 734: ('Ile', 'NONE'), 735: ('Ser', 'Ala'), 738: ('Ile', 'Arg'), 739: ('Ala', 'Arg'), 740: ('Trp', 'Leu'), 741: ('Ala', 'Pro'), 742: ('Val', 'His'), 743: ('Thr', 'Arg'), 744: ('Gln', 'His'), 745: ('Phe', 'Gln'), 746: ('Gly', 'Arg'), 748: ('Tyr', 'Met'), 749: ('Ser', 'Ala'), 750: ('Ala', 'Arg'), 751: ('Asn', 'His'), 752: ('Leu', 'NONE'), 753: ('Arg', 'NONE'), 754: ('Ala', 'NONE'), 755: ('Gly', 'NONE'), 756: ('Ala', 'NONE'), 757: ('Gly', 'NONE'), 758: ('Val', 'NONE'), 759: ('Ile', 'NONE'), 760: ('Val', 'Ile'), 762: ('Leu', 'Arg'), 763: ('Ser', 'His'), 764: ('Pro', 'Cys'), 768: ('Lys', 'Met'), 769: ('Gln', 'Gly'), 771: ('Leu', 'His'), 773: ('Leu', 'Ile'), 776: ('NONE', 'Val'), 777: ('NONE', 'Phe'), 778: ('NONE', 'Arg'), 779: ('NONE', 'Glu'), 780: ('NONE', 'Ser'), 781: ('NONE', 'Ala'), 782: ('Asp', 'Arg'), 784: ('Asn', 'Cys'), 785: ('His', 'Gly'), 787: ('Asn', 'Asp'), 788: ('Ile', 'Cys'), 800: ('Arg', 'Pro'), 801: ('Phe', 'NONE'), 802: ('Ile', 'NONE'), 803: ('Val', 'NONE'), 804: ('Leu', 'NONE'), 805: ('Gly', 'NONE'), 806: ('Ile', 'NONE'), 807: ('Trp', 'NONE'), 808: ('Val', 'NONE'), 809: ('Ile', 'NONE'), 810: ('Met', 'NONE'), 811: ('Leu', 'NONE'), 812: ('Ala', 'NONE'), 813: ('Leu', 'NONE'), 814: ('Thr', 'NONE'), 815: ('Ile', 'NONE'), 816: ('Phe', 'NONE'), 817: ('Asn', 'NONE'), 818: ('Leu', 'NONE'), 820: ('Ala', 'Pro'), 821: ('Thr', 'Gln'), 822: ('Pro', 'Thr'), 823: ('Ser', 'Ala'), 824: ('Ile', 'Ala'), 825: ('Asp', 'Arg'), 826: ('Trp', 'Leu'), 827: ('Trp', 'Ala')}
+synPoly: {736: ('GCC', 'GCT'), 737: ('GCC', 'GCT'), 770: ('CGG', 'CGT'), 772: ('GCC', 'GCA'), 774: ('CGC', 'CGG'), 775: ('CCT', 'CCC'), 747: ('CCG', 'CCT'), 783: ('GGC', 'GGG'), 786: ('CGG', 'CGT'), 819: ('GAA', 'GAG'), 724: ('CCC', 'CCG'), 799: ('CGC', 'AGG')}
+-------------------------
+ortholog_000989.nt_ali.Bifidobacteriumanimalissubsplactis.fasta =>
+Variation: [613]
+nonSynPoly: {204: ('Ser', 'Phe')}
+synPoly: {}
