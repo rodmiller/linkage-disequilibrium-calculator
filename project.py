@@ -106,6 +106,7 @@ def countNucs(seqNucs):
 	countT = 0
 	countC = 0
 	countG = 0
+	countU = 0
 	i = 0 #For indexing point mutations '-'
 	for nuc in seqNucs:
 		if nuc == 'A':
@@ -116,6 +117,8 @@ def countNucs(seqNucs):
 			countC = countC + 1
 		elif nuc == 'G':
 			countG = countG + 1
+		elif nuc == 'U':
+			countU = countU + 1
 		elif nuc == '-': #A known insertion or deletion mutation
 			pointMutations.append(i) #Append the index of the mutation to the list
 		else:
@@ -125,6 +128,7 @@ def countNucs(seqNucs):
 	countedNucs['t'] = countT
 	countedNucs['c'] = countC
 	countedNucs['g'] = countG
+	countedNucs['u'] = countU
 	return countedNucs,pointMutations #Returns a tuple
 
 def findPointMutations(seqNucs):
