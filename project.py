@@ -128,7 +128,8 @@ def countNucs(seqNucs):
 	countedNucs['t'] = countT
 	countedNucs['c'] = countC
 	countedNucs['g'] = countG
-	countedNucs['u'] = countU
+	if countU > 0:
+		countedNucs['u'] = countU
 	return countedNucs,pointMutations #Returns a tuple
 
 def findPointMutations(seqNucs):
