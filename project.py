@@ -242,17 +242,25 @@ def calcLinkageDisequilibrium(variation, sequences):
 			#print sequence[variation[i]]
 			if sequence[variation[i]] not in basePolyList and sequence[variation[i]] != '-': #Prevent duplicates of the same nucleotide being added and prevent point mutations being added
 				basePolyList.append(sequence[variation[i]]) #Append the polymorphic nucleotide to the list
+				#print sequence[variation[i]] + ' Added!'
+		#print '------- Base Poly is: ' + str(basePolyList)
+		#print 'Len of Base Poly is: ' + str(len(basePolyList))
 		if len(basePolyList) != 2: #Only interested if there are 2 possible nucleotides, if more than 2 then its too complicated if less than then its not polymorphic!
 			print 'Too many polymorphisms at this site to work with'
 			break #Break back to next polymorphism index in file
 		else:
 			bigA = basePolyList[0] #First one to come across is bigA
 			littleA = basePolyList[1] #Second one is littleA
-		for x in range(len(variation), i): #Use x here to iterate through the list, using i as the start in the range to prevent comparing preceding polymorphisms
+			#print bigA + ' ' + littleA
+		for x in range(i, len(variation)): #Use x here to iterate through the list, using i as the start in the range to prevent comparing preceding polymorphisms
+			#print x
 			testPolyList = [] #Initialise list to be used to compare the nucleotides at the second polymorphic site
 			for sequence in sequences: #For each sequence in the list of sequences
 				if sequence[variation[x]] not in testPolyList and sequence[variation[i]] != '-': #Prevent duplicates of the same nucleotide being added and prevent point mutations being added
 					testPolyList.append(sequence[variation[i]]) #Append the polymorphic nucleotide to the list
+			if basePolyList[0] != testPolyList[0] and basePolyList[1] != testPolyList[1]:
+				print '-----Base Poly is: ' + str(basePolyList)
+				print 'Test Poly is: ' + str(testPolyList)
 			if len(testPolyList) != 2: #Only interested if there are 2 possible nucleotides, if more than 2 then its too complicated if less than then its not polymorphic!
 				print 'Too many polymorphisms at this site to work with'
 				break #Break back to next polymorphism index in file
@@ -268,6 +276,11 @@ def calcLinkageDisequilibrium(variation, sequences):
 				paB = 1.0
 			if littleA == littleB:
 				pab = 1.0
+			#print 'A = %s' % bigA
+			#print 'B = %s' % bigB
+			#print 'b = %s' % littleB
+			#print 'a = %s' % littleA
+			#print basePolyList
 
 def getNonSynonymousPolymorphisms(allSeqAA):
 	'''Takes a list of a list of Amino Acids (i.e. [[Gln, Asp...],[Asp, Glu...]]).
@@ -323,18 +336,19 @@ def iterateFiles(dir):
 		sequences = getSequences(fileObject) #Breaks the file down into sequences
 		variation = getVariation(sequences) #Works out the variation for each sequence
 		#print variation
-		allCodons = getAllCodons(sequences)
+		#allCodons = getAllCodons(sequences)
 		#print allCodons
-		allAminoAcids = getAllAminoAcids(allCodons)
+		#allAminoAcids = getAllAminoAcids(allCodons)
 		#print allAminoAcids
-		nonSynPoly = getNonSynonymousPolymorphisms(allAminoAcids)
-		synPoly = getSynonymousPolymorphisms(allCodons)
-		if variation:
-			print '-------------------------'
-			print '%s =>' % file
-			print 'Variation: %s' % variation
-			print 'nonSynPoly: %s' % nonSynPoly
-			print 'synPoly: %s' % synPoly
+		#nonSynPoly = getNonSynonymousPolymorphisms(allAminoAcids)
+		#synPoly = getSynonymousPolymorphisms(allCodons)
+		#if variation:
+		#	print '-------------------------'
+		#	print '%s =>' % file
+		#	print 'Variation: %s' % variation
+		#	print 'nonSynPoly: %s' % nonSynPoly
+		#	print 'synPoly: %s' % synPoly
+		calcLinkageDisequilibrium(variation, sequences)
 #		if len(variation)==1: #If only one polymorphism
 #			print '%s --> %s polymorphism. Location is: %s' % (file[9:15], len(variation), str(variation))
 ##		elif len(variation)==0: #If no polymorphisms. Comment out to not list all the uninteresting non-polymorphic files
@@ -367,8 +381,8 @@ def main():
 	#print getVariation(sequences)
 	#print seqNuc
 	#print seqHeader
-	#iterateFiles('/Users/robert/Dropbox/Biomedicine/Yr 3/FYP/Bifidobacterium animalis lactis/') #Calculates for all the files in the bifidobacterium folder
-	calcLinkageDisequilibrium(variation, sequences)
+	iterateFiles('/Users/robert/Dropbox/Biomedicine/Yr 3/FYP/Bifidobacterium animalis lactis/') #Calculates for all the files in the bifidobacterium folder
+	#calcLinkageDisequilibrium(variation, sequences)
 	
 if __name__ == '__main__':
 	main()
