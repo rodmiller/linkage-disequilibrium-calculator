@@ -262,8 +262,8 @@ def calcLinkageDisequilibrium(variation, sequences, file):
 				#print 'Too many polymorphisms at this site to work with'
 				break #Break back to next polymorphism index in file
 			else:
-				if basePolyList[0] != testPolyList[0] or basePolyList[1] != testPolyList[1]: #Only print if bigA and bigB are different or littleA and littleB are different
-					print '----------- File is: ' + file + ' and index is: ' + variation[i]
+				if basePolyList != testPolyList: #Only print if bigA and bigB are different or littleA and littleB are different
+					print '----------- File is: ' + file + ' and index is: ' + str(variation[i])
 					print 'Base Poly is: ' + str(basePolyList)
 					print 'Test Poly is: ' + str(testPolyList)
 				bigB = testPolyList[0] #First one to come across is bigB
