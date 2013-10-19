@@ -218,7 +218,7 @@ def getAminoAcids(seqCodons):
 				aminoAcids.append(aminoAcid) #Append the corresponding AA to the list
 	return aminoAcids #Returns a list of Amino Acid 3-character names
 
-def calcLinkageDisequilibrium(sequence):
+def calcLinkageDisequilibrium(variation, sequences):
 	'''5. Calculate the linkage disequilibrium (LD) between all pairs of polymorphic sites. To calculate LD we will use the method of Hill and Robertson, r^2.
 
 	r^2 = D^2 / (P(AB) P(aB) P(Ab) P(ab))
@@ -226,8 +226,47 @@ def calcLinkageDisequilibrium(sequence):
 	where D = P(AB) - P(A)P(B)
 
 	and P(AB)..etc are the frequencies of the haplotypes (chromosomes) carrying the A and B alleles, and P(A)...etc are the frequencies of the A allele at the A locus. I can describe this in more detail if you need.
-	'''
 	
+	Takes a list of polymorphism locations in the sequence data and the sequence data,
+	iterates through them and compares them pairwise to one another.
+	It assigns alleles to nucleotides at the sites, with the 1st nucleotide coming across
+	being bigA and the second being	littleA. Then it calculates the LD between the sites using r^2.
+	
+	r^2 = D^2 / (P(AB) P(aB) P(Ab) P(ab))
+
+	where D = P(AB) - P(A)P(B)
+	'''
+	for i in range(len(variation)): #Use i to be sure we only compare polymorphisms occurring after the current one in the list
+		basePolyList = [] #Initialise list to be used to compare the nucleotides at the first polymorphic site
+		for sequence in sequences: #For each sequence in the list of sequences
+			if sequence[variation[i]] is not in basePolyList and sequence[variation[i]] != '-': #Prevent duplicates of the same nucleotide being added and prevent point mutations being added
+				basePolyList.append(sequence[variation[i]]) #Append the polymorphic nucleotide to the list
+		if len(basePolyList) != 2: #Only interested if there are 2 possible nucleotides, if more than 2 then its too complicated if less than then its not polymorphic!
+			print 'Too many polymorphisms at this site to work with'
+			break #Break back to next polymorphism index in file
+		else:
+			bigA = basePolyList[0] #First one to come across is bigA
+			littleA = basePolyList[1] #Second one is littleA
+		for x in range(len(variation), i): #Use x here to iterate through the list, using i as the start in the range to prevent comparing preceding polymorphisms
+			testPolyList = [] #Initialise list to be used to compare the nucleotides at the second polymorphic site
+			for sequence in sequences: #For each sequence in the list of sequences
+				if sequence[variation[x]] is not in testPolyList and sequence[variation[i]] != '-': #Prevent duplicates of the same nucleotide being added and prevent point mutations being added
+					testPolyList.append(sequence[variation[i]]) #Append the polymorphic nucleotide to the list
+			if len(testPolyList) != 2: #Only interested if there are 2 possible nucleotides, if more than 2 then its too complicated if less than then its not polymorphic!
+				print 'Too many polymorphisms at this site to work with'
+				break #Break back to next polymorphism index in file
+			else:
+				bigB = testPolyList[0] #First one to come across is bigB
+				littleB = testPolyList[1] #Second one is littleB
+			#Finished defining the nucleotides now moving to define the haplotype frequencies
+			if bigA == bigB:
+				pAB = 1.0
+			if bigA == littleB:
+				pAb = 1.0
+			if littleA == bigB:
+				paB = 1.0
+			if littleA == littleB:
+				pab = 1.0
 
 def getNonSynonymousPolymorphisms(allSeqAA):
 	'''Takes a list of a list of Amino Acids (i.e. [[Gln, Asp...],[Asp, Glu...]]).
@@ -243,7 +282,7 @@ def getNonSynonymousPolymorphisms(allSeqAA):
 					#print '%s - %s' % (len(baseSeqAA), len(testSeqAA))
 					if baseSeqAA[x] != testSeqAA[x]: #Only print if the polymorphism is non-synonymous
 						#print '%s: %s -> %s' % (x, baseSeqAA[x], testSeqAA[x]) #Prints out the index: 1stAA->2ndAA
-						changeAminoAcid = (baseSeqAA[x], testSeqAA[x])
+						changeAminoAcid = (baseSeqAA[x], testSeqAA[x]) #The tuple to append to the dictionary (1stAA, 2ndAA)
 						#print changeAminoAcid
 						nonSynPolymorphisms[x] = changeAminoAcid #Appends to the dictionary
 	return nonSynPolymorphisms #Returns a dictionary
