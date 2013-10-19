@@ -239,8 +239,8 @@ def calcLinkageDisequilibrium(variation, sequences):
 	for i in range(len(variation)): #Use i to be sure we only compare polymorphisms occurring after the current one in the list
 		basePolyList = [] #Initialise list to be used to compare the nucleotides at the first polymorphic site
 		for sequence in sequences: #For each sequence in the list of sequences
-			print sequence[variation[i]]
-			if sequence[variation[i]] is not in basePolyList: #and sequence[variation[i]] != '-': #Prevent duplicates of the same nucleotide being added and prevent point mutations being added
+			#print sequence[variation[i]]
+			if sequence[variation[i]] not in basePolyList and sequence[variation[i]] != '-': #Prevent duplicates of the same nucleotide being added and prevent point mutations being added
 				basePolyList.append(sequence[variation[i]]) #Append the polymorphic nucleotide to the list
 		if len(basePolyList) != 2: #Only interested if there are 2 possible nucleotides, if more than 2 then its too complicated if less than then its not polymorphic!
 			print 'Too many polymorphisms at this site to work with'
@@ -251,7 +251,7 @@ def calcLinkageDisequilibrium(variation, sequences):
 		for x in range(len(variation), i): #Use x here to iterate through the list, using i as the start in the range to prevent comparing preceding polymorphisms
 			testPolyList = [] #Initialise list to be used to compare the nucleotides at the second polymorphic site
 			for sequence in sequences: #For each sequence in the list of sequences
-				if sequence[variation[x]] is not in testPolyList and sequence[variation[i]] != '-': #Prevent duplicates of the same nucleotide being added and prevent point mutations being added
+				if sequence[variation[x]] not in testPolyList and sequence[variation[i]] != '-': #Prevent duplicates of the same nucleotide being added and prevent point mutations being added
 					testPolyList.append(sequence[variation[i]]) #Append the polymorphic nucleotide to the list
 			if len(testPolyList) != 2: #Only interested if there are 2 possible nucleotides, if more than 2 then its too complicated if less than then its not polymorphic!
 				print 'Too many polymorphisms at this site to work with'
