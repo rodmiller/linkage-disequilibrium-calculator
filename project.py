@@ -218,7 +218,7 @@ def getAminoAcids(seqCodons):
 				aminoAcids.append(aminoAcid) #Append the corresponding AA to the list
 	return aminoAcids #Returns a list of Amino Acid 3-character names
 
-def calcLinkageDisequilibrium(variation, sequences):
+def calcLinkageDisequilibrium(variation, sequences, file):
 	'''5. Calculate the linkage disequilibrium (LD) between all pairs of polymorphic sites. To calculate LD we will use the method of Hill and Robertson, r^2.
 
 	r^2 = D^2 / (P(AB) P(aB) P(Ab) P(ab))
@@ -246,7 +246,7 @@ def calcLinkageDisequilibrium(variation, sequences):
 		#print '------- Base Poly is: ' + str(basePolyList)
 		#print 'Len of Base Poly is: ' + str(len(basePolyList))
 		if len(basePolyList) != 2: #Only interested if there are 2 possible nucleotides, if more than 2 then its too complicated if less than then its not polymorphic!
-			print 'Too many polymorphisms at this site to work with'
+			#print 'Too many polymorphisms at this site to work with'
 			break #Break back to next polymorphism index in file
 		else:
 			bigA = basePolyList[0] #First one to come across is bigA
@@ -258,13 +258,14 @@ def calcLinkageDisequilibrium(variation, sequences):
 			for sequence in sequences: #For each sequence in the list of sequences
 				if sequence[variation[x]] not in testPolyList and sequence[variation[i]] != '-': #Prevent duplicates of the same nucleotide being added and prevent point mutations being added
 					testPolyList.append(sequence[variation[i]]) #Append the polymorphic nucleotide to the list
-			if basePolyList[0] != testPolyList[0] and basePolyList[1] != testPolyList[1]:
-				print '-----Base Poly is: ' + str(basePolyList)
-				print 'Test Poly is: ' + str(testPolyList)
 			if len(testPolyList) != 2: #Only interested if there are 2 possible nucleotides, if more than 2 then its too complicated if less than then its not polymorphic!
-				print 'Too many polymorphisms at this site to work with'
+				#print 'Too many polymorphisms at this site to work with'
 				break #Break back to next polymorphism index in file
 			else:
+				if basePolyList[0] != testPolyList[0] or basePolyList[1] != testPolyList[1]:
+					print '----------- File is: ' + file
+					print 'Base Poly is: ' + str(basePolyList)
+					print 'Test Poly is: ' + str(testPolyList)
 				bigB = testPolyList[0] #First one to come across is bigB
 				littleB = testPolyList[1] #Second one is littleB
 			#Finished defining the nucleotides now moving to define the haplotype frequencies
@@ -330,6 +331,7 @@ def iterateFiles(dir):
 	to getSequences() and getVariation(). It then returns a string for the number of
 	polymorphisms and their location within the file.'''
 	files = os.listdir(dir) #Lists the files in the supplied dir. 
+	#print files
 	for file in files: #Iterates through each file in the list of files
 		#print dir + file
 		fileObject = openFile(dir + file) #Opens the file chosen using openFile()
@@ -348,7 +350,7 @@ def iterateFiles(dir):
 		#	print 'Variation: %s' % variation
 		#	print 'nonSynPoly: %s' % nonSynPoly
 		#	print 'synPoly: %s' % synPoly
-		calcLinkageDisequilibrium(variation, sequences)
+		calcLinkageDisequilibrium(variation, sequences, file)
 #		if len(variation)==1: #If only one polymorphism
 #			print '%s --> %s polymorphism. Location is: %s' % (file[9:15], len(variation), str(variation))
 ##		elif len(variation)==0: #If no polymorphisms. Comment out to not list all the uninteresting non-polymorphic files
