@@ -239,7 +239,8 @@ def calcLinkageDisequilibrium(variation, sequences):
 	for i in range(len(variation)): #Use i to be sure we only compare polymorphisms occurring after the current one in the list
 		basePolyList = [] #Initialise list to be used to compare the nucleotides at the first polymorphic site
 		for sequence in sequences: #For each sequence in the list of sequences
-			if sequence[variation[i]] is not in basePolyList and sequence[variation[i]] != '-': #Prevent duplicates of the same nucleotide being added and prevent point mutations being added
+			print sequence[variation[i]]
+			if sequence[variation[i]] is not in basePolyList: #and sequence[variation[i]] != '-': #Prevent duplicates of the same nucleotide being added and prevent point mutations being added
 				basePolyList.append(sequence[variation[i]]) #Append the polymorphic nucleotide to the list
 		if len(basePolyList) != 2: #Only interested if there are 2 possible nucleotides, if more than 2 then its too complicated if less than then its not polymorphic!
 			print 'Too many polymorphisms at this site to work with'
@@ -342,14 +343,15 @@ def iterateFiles(dir):
 #			print '%s --> %s polymorphisms. Locations are: %s' % (file[9:15], len(variation), str(variation))
 		
 def main():
-	#if os.name == 'nt': #If on windows, open this tester file
-	#	fileObject = openFile('F:\USER FILES\Dropbox\Dropbox\Biomedicine\Yr 3\FYP\Bifidobacterium animalis lactis\ortholog_000506.nt_ali.Bifidobacteriumanimalissubsplactis.fasta')
-	#elif os.name == 'posix': #If on mac, open this tester file
-	#	fileObject = openFile('/Users/robert/Dropbox/Biomedicine/Yr 3/FYP/Bifidobacterium animalis lactis/ortholog_000506.nt_ali.Bifidobacteriumanimalissubsplactis.fasta')
-	#sequences = getSequences(fileObject)
+	if os.name == 'nt': #If on windows, open this tester file
+		fileObject = openFile('F:\USER FILES\Dropbox\Dropbox\Biomedicine\Yr 3\FYP\Bifidobacterium animalis lactis\ortholog_000397.nt_ali.Bifidobacteriumanimalissubsplactis.fasta')
+	elif os.name == 'posix': #If on mac, open this tester file
+		fileObject = openFile('/Users/robert/Dropbox/Biomedicine/Yr 3/FYP/Bifidobacterium animalis lactis/ortholog_000506.nt_ali.Bifidobacteriumanimalissubsplactis.fasta')
+	sequences = getSequences(fileObject)
 	#print sequences
 	#for sequence in sequences:
 	#	print len(sequence)
+	variation = getVariation(sequences)
 	#allCodons = getAllCodons(sequences)
 	#print allCodons
 	#allAminoAcids = getAllAminoAcids(allCodons)
@@ -365,7 +367,8 @@ def main():
 	#print getVariation(sequences)
 	#print seqNuc
 	#print seqHeader
-	iterateFiles('/Users/robert/Dropbox/Biomedicine/Yr 3/FYP/Bifidobacterium animalis lactis/') #Calculates for all the files in the bifidobacterium folder
+	#iterateFiles('/Users/robert/Dropbox/Biomedicine/Yr 3/FYP/Bifidobacterium animalis lactis/') #Calculates for all the files in the bifidobacterium folder
+	calcLinkageDisequilibrium(variation, sequences)
 	
 if __name__ == '__main__':
 	main()
