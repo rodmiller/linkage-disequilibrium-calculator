@@ -262,8 +262,8 @@ def calcLinkageDisequilibrium(variation, sequences, file):
 				#print 'Too many polymorphisms at this site to work with'
 				break #Break back to next polymorphism index in file
 			else:
-				if basePolyList[0] != testPolyList[0] or basePolyList[1] != testPolyList[1]:
-					print '----------- File is: ' + file
+				if basePolyList[0] != testPolyList[0] or basePolyList[1] != testPolyList[1]: #Only print if bigA and bigB are different or littleA and littleB are different
+					print '----------- File is: ' + file + ' and index is: ' + variation[i]
 					print 'Base Poly is: ' + str(basePolyList)
 					print 'Test Poly is: ' + str(testPolyList)
 				bigB = testPolyList[0] #First one to come across is bigB
@@ -359,15 +359,15 @@ def iterateFiles(dir):
 #			print '%s --> %s polymorphisms. Locations are: %s' % (file[9:15], len(variation), str(variation))
 		
 def main():
-	if os.name == 'nt': #If on windows, open this tester file
-		fileObject = openFile('F:\USER FILES\Dropbox\Dropbox\Biomedicine\Yr 3\FYP\Bifidobacterium animalis lactis\ortholog_000397.nt_ali.Bifidobacteriumanimalissubsplactis.fasta')
-	elif os.name == 'posix': #If on mac, open this tester file
-		fileObject = openFile('/Users/robert/Dropbox/Biomedicine/Yr 3/FYP/Bifidobacterium animalis lactis/ortholog_000506.nt_ali.Bifidobacteriumanimalissubsplactis.fasta')
-	sequences = getSequences(fileObject)
+	#if os.name == 'nt': #If on windows, open this tester file
+	#	fileObject = openFile('F:\USER FILES\Dropbox\Dropbox\Biomedicine\Yr 3\FYP\Bifidobacterium animalis lactis\ortholog_000397.nt_ali.Bifidobacteriumanimalissubsplactis.fasta')
+	#elif os.name == 'posix': #If on mac, open this tester file
+	#	fileObject = openFile('/Users/robert/Dropbox/Biomedicine/Yr 3/FYP/Bifidobacterium animalis lactis/ortholog_000506.nt_ali.Bifidobacteriumanimalissubsplactis.fasta')
+	#sequences = getSequences(fileObject)
 	#print sequences
 	#for sequence in sequences:
 	#	print len(sequence)
-	variation = getVariation(sequences)
+	#variation = getVariation(sequences)
 	#allCodons = getAllCodons(sequences)
 	#print allCodons
 	#allAminoAcids = getAllAminoAcids(allCodons)
