@@ -326,7 +326,7 @@ def main():
 	#print getVariation(sequences)
 	#print seqNuc
 	#print seqHeader
-	iterateFiles('/Users/robert/Dropbox/Biomedicine/Yr 3/FYP/Bifidobacterium animalis lactis/') #Calculates for all the files in the bifidobacterium file
+	iterateFiles('/Users/robert/Dropbox/Biomedicine/Yr 3/FYP/Bifidobacterium animalis lactis/') #Calculates for all the files in the bifidobacterium folder
 	
 if __name__ == '__main__':
 	main()
