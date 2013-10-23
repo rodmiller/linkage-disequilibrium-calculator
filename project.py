@@ -1,3 +1,5 @@
+#!/usr/bin/python
+#coding: utf-8
 #
 #UP TO STEP 4 IN EMAIL..
 #
@@ -59,8 +61,13 @@ aminoAcidCodons = {
 def openFile(dir):
 	'''Takes the path to a file and opens it, returning the file object'''
 	#FOR DEBUG USING FILE ortholog_000000.nt_ali.Bifidobacteriumanimalissubsplactis.fasta
-	f = open(dir)
-	return f
+	#print dir[-5:]
+	if dir[-5:] == 'fasta':
+		f = open(dir)
+		#print dir
+		return f
+	else:
+		return
 	
 def getSequences(fileObject):
 	'''Takes the file object and dismantles it into its sequences, stripping the headers
@@ -333,32 +340,62 @@ def iterateFiles(dir):
 	files = os.listdir(dir) #Lists the files in the supplied dir. 
 	#print files
 	for file in files: #Iterates through each file in the list of files
-		#print dir + file
+		#print file
 		fileObject = openFile(dir + file) #Opens the file chosen using openFile()
-		sequences = getSequences(fileObject) #Breaks the file down into sequences
-		variation = getVariation(sequences) #Works out the variation for each sequence
-		#print variation
-		#allCodons = getAllCodons(sequences)
-		#print allCodons
-		#allAminoAcids = getAllAminoAcids(allCodons)
-		#print allAminoAcids
-		#nonSynPoly = getNonSynonymousPolymorphisms(allAminoAcids)
-		#synPoly = getSynonymousPolymorphisms(allCodons)
-		#if variation:
-		#	print '-------------------------'
-		#	print '%s =>' % file
-		#	print 'Variation: %s' % variation
-		#	print 'nonSynPoly: %s' % nonSynPoly
-		#	print 'synPoly: %s' % synPoly
-		calcLinkageDisequilibrium(variation, sequences, file)
-#		if len(variation)==1: #If only one polymorphism
-#			print '%s --> %s polymorphism. Location is: %s' % (file[9:15], len(variation), str(variation))
-##		elif len(variation)==0: #If no polymorphisms. Comment out to not list all the uninteresting non-polymorphic files
-##			print '%s --> No Polymorphisms' % (file)
-#		elif len(variation) > 1: #If more than one polymorphism
-#			print '%s --> %s polymorphisms. Locations are: %s' % (file[9:15], len(variation), str(variation))
+		if fileObject:
+			sequences = getSequences(fileObject) #Breaks the file down into sequences
+			variation = getVariation(sequences) #Works out the variation for each sequence
+			#print variation
+			allCodons = getAllCodons(sequences)
+			#print allCodons
+			allAminoAcids = getAllAminoAcids(allCodons)
+			#print allAminoAcids
+			nonSynPoly = getNonSynonymousPolymorphisms(allAminoAcids)
+			synPoly = getSynonymousPolymorphisms(allCodons)
+			if variation:
+				print '-------------------------'
+				print '%s =>' % file
+				print 'Variation: %s' % variation
+				print 'nonSynPoly: %s' % nonSynPoly
+				print 'synPoly: %s' % synPoly
+			calcLinkageDisequilibrium(variation, sequences, file)
+	#		if len(variation)==1: #If only one polymorphism
+	#			print '%s --> %s polymorphism. Location is: %s' % (file[9:15], len(variation), str(variation))
+	##		elif len(variation)==0: #If no polymorphisms. Comment out to not list all the uninteresting non-polymorphic files
+	##			print '%s --> No Polymorphisms' % (file)
+	#		elif len(variation) > 1: #If more than one polymorphism
+	#			print '%s --> %s polymorphisms. Locations are: %s' % (file[9:15], len(variation), str(variation))
 		
+def chooseSequenceData():
+	'''Prompts the user to select a bacterium from a list of folder in a location on the
+	hard drive, then returns a path to the folder containing the bacterium files'''
+	if os.name == 'nt': #On Windows
+		dirPrefix = 'F:\\USER FILES\\Dropbox\\Dropbox\\Biomedicine\\Yr 3\\FYP\\Sequence Data\\' #Choose this folder to get the sequence data from
+	elif os.name == 'posix': #On Mac
+		dirPrefix = '/Users/robert/Dropbox/Biomedicine/Yr 3/FYP/Sequence Data/' #Choose this folder to get all the sequence data from
+	folderList = os.listdir(dirPrefix) #Gets all the file names in the prefix dir
+	bacteriaList = [] #Initialises a list for putting the bacteria names in
+	for folder in folderList: 
+		if folder[0] != '.':#Folder is not a hidden system folder
+			bacteriaList.append(folder) #Append to the list of bacteria
+	for bacteria in bacteriaList:
+		print '%s. %s' % (bacteriaList.index(bacteria), bacteria) #Print out a list of the bacterium for the user to choose from
+	print 'Which bacterium would you like to load?'
+	while True: #This section is to catch user input and ensure it is a number and in range, if not it asks again
+		chosenBacteriaIndex = raw_input('---> ') #Get user input
+		if chosenBacteriaIndex.isalpha() == False: #Only if its a number
+			chosenBacteriaIndex = int(chosenBacteriaIndex) #str -> int
+			if chosenBacteriaIndex <= len(bacteriaList): #If its in range
+				break #Input is all good, break to next part of program
+		print 'Try again...'#Only printed if input is not good
+	chosenBacteria = bacteriaList[chosenBacteriaIndex] #Set chosenBacteria to the name of the bacteria chosen by the user
+	chosenBacteriaDir = dirPrefix + chosenBacteria + '/'
+	return chosenBacteriaDir
+	
+	
 def main():
+	#chosenBacteriaDir = chooseSequenceData()
+	#print chosenBacteriaDir
 	#if os.name == 'nt': #If on windows, open this tester file
 	#	fileObject = openFile('F:\USER FILES\Dropbox\Dropbox\Biomedicine\Yr 3\FYP\Bifidobacterium animalis lactis\ortholog_000397.nt_ali.Bifidobacteriumanimalissubsplactis.fasta')
 	#elif os.name == 'posix': #If on mac, open this tester file
@@ -383,7 +420,7 @@ def main():
 	#print getVariation(sequences)
 	#print seqNuc
 	#print seqHeader
-	iterateFiles('/Users/robert/Dropbox/Biomedicine/Yr 3/FYP/Bifidobacterium animalis lactis/') #Calculates for all the files in the bifidobacterium folder
+	iterateFiles('/Users/robert/Dropbox/Biomedicine/Yr 3/FYP/Sequence Data/Chlamydia psittaci/') #Calculates for all the files in the bifidobacterium folder
 	#calcLinkageDisequilibrium(variation, sequences)
 	
 if __name__ == '__main__':
