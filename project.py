@@ -205,7 +205,7 @@ def getAllAminoAcids(allCodons):
 
 def getCodons(seqNuc):
 	'''Takes a sequence string, iterates through it and splits the string into a list of
-	codons. ORF starts from 1st character'''
+	codons. ORF starts from 0th character'''
 	i = 0 #For counting through the codons
 	seqCodons = [] #Initiate the list to appended to
 	while i <= len(seqNuc): #Avoid Str index out of range errors
@@ -225,16 +225,8 @@ def getAminoAcids(seqCodons):
 				aminoAcids.append(aminoAcid) #Append the corresponding AA to the list
 	return aminoAcids #Returns a list of Amino Acid 3-character names
 
-def calcLinkageDisequilibrium(variation, sequences, file):
-	'''5. Calculate the linkage disequilibrium (LD) between all pairs of polymorphic sites. To calculate LD we will use the method of Hill and Robertson, r^2.
-
-	r^2 = D^2 / (P(AB) P(aB) P(Ab) P(ab))
-
-	where D = P(AB) - P(A)P(B)
-
-	and P(AB)..etc are the frequencies of the haplotypes (chromosomes) carrying the A and B alleles, and P(A)...etc are the frequencies of the A allele at the A locus. I can describe this in more detail if you need.
-	
-	Takes a list of polymorphism locations in the sequence data and the sequence data,
+def calcLinkageDisequilibrium(allPolymorphisms, sequences, file):
+	'''Takes a list of polymorphism locations in the sequence data and the sequence data,
 	iterates through them and compares them pairwise to one another.
 	It assigns alleles to nucleotides at the sites, with the 1st nucleotide coming across
 	being bigA and the second being	littleA. Then it calculates the LD between the sites using r^2.
@@ -242,8 +234,12 @@ def calcLinkageDisequilibrium(variation, sequences, file):
 	r^2 = D^2 / (P(AB) P(aB) P(Ab) P(ab))
 
 	where D = P(AB) - P(A)P(B)
+	NEEDS REWRITE ASAP
 	'''
-	for i in range(len(variation)): #Use i to be sure we only compare polymorphisms occurring after the current one in the list
+	synPolymorphisms = allPolymorphisms[0]
+	nonSynPolymorphisms = allPolymorphisms[1]
+	totalLen = len(synPolymorphisms) + len(nonSynPolymorphisms)
+	for i in range(totalLen): #Use i to be sure we only compare polymorphisms occurring after the current one in the list
 		basePolyList = [] #Initialise list to be used to compare the nucleotides at the first polymorphic site
 		for sequence in sequences: #For each sequence in the list of sequences
 			#print sequence[variation[i]]
@@ -324,7 +320,7 @@ def getSynonymousPolymorphisms(allSeqCodons):
 					#print baseSeqCodons[x] + ' ' + testSeqCodons[x]
 					for aminoAcid in aminoAcidCodons: #Iterate through the dictionary to find the AA the codon codes for
 						#print aminoAcid
-						if baseSeqCodons[x] in aminoAcidCodons[aminoAcid]:
+						if baseSeqCodons[x] in aminoAcidCodons[aminoAcid]: #If True we have found the AA for this codon
 							#print 'Found an AA for base codon'
 							#print aminoAcid
 							baseSeqCodonAA = aminoAcid
@@ -333,6 +329,42 @@ def getSynonymousPolymorphisms(allSeqCodons):
 								synPolymorphisms[x] = (baseSeqCodons[x], testSeqCodons[x]) #Append it to the dictionary
 	return synPolymorphisms	
 		
+def categorisePolymorphisms(allSeqCodons):
+	'''Takes a list of a list of codons (i.e. [[AGC, TAG...],[TGC, CGT...]])
+	then iterates through comparing each list of codons to another.
+	If the codons are different it compares them in the Amino Acid dictionary. 
+	If they code for the same AA they are Synonymous and are added to the synPolymorphisms
+	dictionary in the format {polymorphic codon index: (Amino Acid, 1st Codon, 2nd Codon)}
+	If they code for different AAs they are Non Synonymous and are added to the
+	nonSynPolymorphisms dictionary in the format {polymorphic codon index: (1st AA, 2nd AA)}
+	Returns a tuple in the format (synPolymorphisms, nonSynPolymorphisms)
+	'''
+	#testData = [['ATT', 'ATT', 'ATT', 'ATT'], ['ATC', 'ATG', 'ATT', 'ATT']]
+	#allSeqCodons = testData
+	synPolymorphisms = {} #Initialise the Synonymous Polymorphisms dictionary
+	nonSynPolymorphisms = {} #Initialise the Non Synonymous Polymorphisms dictionary
+	for baseSeqCodons in allSeqCodons: #The first codons to compare the others to
+		for testSeqCodons in allSeqCodons: #Codons to compare the first to
+			#print 'Comparing %s to %s' % (baseSeqCodons, testSeqCodons)
+			for x in range(len(baseSeqCodons)): #Iterate through using x to maintain the same index
+				if baseSeqCodons[x] != testSeqCodons[x]: #The codons are different therefore polymorphism
+					#print 'Difference found at index %s between %s and %s' % (x, baseSeqCodons[x], testSeqCodons[x])
+					for aminoAcid in aminoAcidCodons: #Iterate through the Amino Acid dictionary
+						if baseSeqCodons[x] in aminoAcidCodons[aminoAcid]: #If True we have found the AA for this codon
+							baseSeqCodonAA = aminoAcid
+							#print 'BASE: Found an Amino Acid for %s. Its %s' % (baseSeqCodons[x], baseSeqCodonAA)
+							if testSeqCodons[x] in aminoAcidCodons[aminoAcid]: #if True the codon represents an amino acid and the two codons represent the same one therefore synonymous
+								#print 'TEST: Its the Same Amino Acid in the test seq. Its %s' % aminoAcid
+								synPolymorphisms[x] = (aminoAcid, baseSeqCodons[x], testSeqCodons[x]) #Append to the synonymous polymorphisms dictionary
+							else: #If above statement is False, it could be Non Synonymous
+								#print 'TEST: Its a different Amino Acid in the test seq.'
+								for aminoAcid in aminoAcidCodons:
+									if testSeqCodons[x] in aminoAcidCodons[aminoAcid]:
+										testSeqCodonAA = aminoAcid
+										nonSynPolymorphisms[x] = (baseSeqCodonAA, testSeqCodonAA)
+	return (synPolymorphisms, nonSynPolymorphisms)
+
+
 def iterateFiles(dir):
 	'''Takes the path to a directory and iterates over the files in it, passing each one
 	to getSequences() and getVariation(). It then returns a string for the number of
@@ -352,13 +384,13 @@ def iterateFiles(dir):
 			#print allAminoAcids
 			nonSynPoly = getNonSynonymousPolymorphisms(allAminoAcids)
 			synPoly = getSynonymousPolymorphisms(allCodons)
-			if variation:
+			if variation and len(variation) != len(nonSynPoly)+len(synPoly):
 				print '-------------------------'
-				print '%s =>' % file
+				print '%s => %s variation and %s polys' % (file, len(variation), str(len(nonSynPoly)+len(synPoly)))
 				print 'Variation: %s' % variation
 				print 'nonSynPoly: %s' % nonSynPoly
 				print 'synPoly: %s' % synPoly
-			calcLinkageDisequilibrium(variation, sequences, file)
+			
 	#		if len(variation)==1: #If only one polymorphism
 	#			print '%s --> %s polymorphism. Location is: %s' % (file[9:15], len(variation), str(variation))
 	##		elif len(variation)==0: #If no polymorphisms. Comment out to not list all the uninteresting non-polymorphic files
@@ -396,14 +428,19 @@ def chooseSequenceData():
 def main():
 	#chosenBacteriaDir = chooseSequenceData()
 	#print chosenBacteriaDir
-	#if os.name == 'nt': #If on windows, open this tester file
-	#	fileObject = openFile('F:\USER FILES\Dropbox\Dropbox\Biomedicine\Yr 3\FYP\Bifidobacterium animalis lactis\ortholog_000397.nt_ali.Bifidobacteriumanimalissubsplactis.fasta')
-	#elif os.name == 'posix': #If on mac, open this tester file
-	#	fileObject = openFile('/Users/robert/Dropbox/Biomedicine/Yr 3/FYP/Bifidobacterium animalis lactis/ortholog_000506.nt_ali.Bifidobacteriumanimalissubsplactis.fasta')
-	#sequences = getSequences(fileObject)
+	if os.name == 'nt': #If on windows, open this tester file
+		fileObject = openFile('F:\USER FILES\Dropbox\Dropbox\Biomedicine\Yr 3\FYP\Bifidobacterium animalis lactis\ortholog_000397.nt_ali.Bifidobacteriumanimalissubsplactis.fasta')
+	elif os.name == 'posix': #If on mac, open this tester file
+		fileObject = openFile('/Users/robert/Dropbox/Biomedicine/Yr 3/FYP/Sequence Data/Chlamydia psittaci/ortholog_000004.nt_ali.fasta')
+	sequences = getSequences(fileObject)
 	#print sequences
 	#for sequence in sequences:
 	#	print len(sequence)
+	allSeqCodons = getAllCodons(sequences)
+	allPolymorphisms = categorisePolymorphisms(allSeqCodons)
+	synPolymorphisms = allPolymorphisms[0]
+	nonSynPolymorphisms = allPolymorphisms[1]
+	calcLinkageDisequilibrium(allPolymorphisms, sequences, file)
 	#variation = getVariation(sequences)
 	#allCodons = getAllCodons(sequences)
 	#print allCodons
@@ -420,7 +457,7 @@ def main():
 	#print getVariation(sequences)
 	#print seqNuc
 	#print seqHeader
-	iterateFiles('/Users/robert/Dropbox/Biomedicine/Yr 3/FYP/Sequence Data/Chlamydia psittaci/') #Calculates for all the files in the bifidobacterium folder
+	#iterateFiles('/Users/robert/Dropbox/Biomedicine/Yr 3/FYP/Sequence Data/Chlamydia psittaci/') #Calculates for all the files in the bifidobacterium folder
 	#calcLinkageDisequilibrium(variation, sequences)
 	
 if __name__ == '__main__':
