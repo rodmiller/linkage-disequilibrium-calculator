@@ -176,7 +176,7 @@ def getVariation(sequences):
 		for sequence in sequences: #Compares each sequence to the base sequence chosen above
 			for x in range(len(sequence)): #For each character in the sequence, using x to allow the same character index to be compared among the base and test sequence
 				#print sequence[x]
-				if sequence[x] != baseSequence[x]: #Not equal == polymorphism
+				if sequence[x] != baseSequence[x] and sequence[x] != '-' and baseSequence[x] != '-': #Not equal == polymorphism
 					#print 'Polymorphism at index %s between sequence %s and sequence %s' % (str(x), sequences.index(sequence), sequences.index(baseSequence))
 					if x not in polymorphismIndexes: #If the polymorphism location is already noted then no point adding it again
 						polymorphismIndexes.append(x) #Adds it to a list of the polymorphism indexes in the file
@@ -225,7 +225,7 @@ def getAminoAcids(seqCodons):
 				aminoAcids.append(aminoAcid) #Append the corresponding AA to the list
 	return aminoAcids #Returns a list of Amino Acid 3-character names
 
-def calcLinkageDisequilibrium(allPolymorphisms, sequences, file):
+def calcLinkageDisequilibrium(variation, sequences, file):
 	'''Takes a list of polymorphism locations in the sequence data and the sequence data,
 	iterates through them and compares them pairwise to one another.
 	It assigns alleles to nucleotides at the sites, with the 1st nucleotide coming across
@@ -236,10 +236,7 @@ def calcLinkageDisequilibrium(allPolymorphisms, sequences, file):
 	where D = P(AB) - P(A)P(B)
 	NEEDS REWRITE ASAP
 	'''
-	synPolymorphisms = allPolymorphisms[0]
-	nonSynPolymorphisms = allPolymorphisms[1]
-	totalLen = len(synPolymorphisms) + len(nonSynPolymorphisms)
-	for i in range(totalLen): #Use i to be sure we only compare polymorphisms occurring after the current one in the list
+	for i in range(len(variation)): #Use i to be sure we only compare polymorphisms occurring after the current one in the list
 		basePolyList = [] #Initialise list to be used to compare the nucleotides at the first polymorphic site
 		for sequence in sequences: #For each sequence in the list of sequences
 			#print sequence[variation[i]]
@@ -248,13 +245,18 @@ def calcLinkageDisequilibrium(allPolymorphisms, sequences, file):
 				#print sequence[variation[i]] + ' Added!'
 		#print '------- Base Poly is: ' + str(basePolyList)
 		#print 'Len of Base Poly is: ' + str(len(basePolyList))
-		if len(basePolyList) != 2: #Only interested if there are 2 possible nucleotides, if more than 2 then its too complicated if less than then its not polymorphic!
-			#print 'Too many polymorphisms at this site to work with'
-			break #Break back to next polymorphism index in file
-		else:
-			bigA = basePolyList[0] #First one to come across is bigA
-			littleA = basePolyList[1] #Second one is littleA
-			#print bigA + ' ' + littleA
+		#if len(basePolyList) != 2: #Only interested if there are 2 possible nucleotides, if more than 2 then its too complicated if less than then its not polymorphic!
+		#	print 'Too many polymorphisms at this site to work with'
+		#	break #Break back to next polymorphism index in file
+		#else:
+		print basePolyList
+		bigA = basePolyList[0] #First one to come across is bigA
+		for basePoly in basePolyList:
+			if basePoly != bigA:
+				littleA = basePoly
+
+		#littleA = basePolyList[1] #Second one is littleA
+		#print bigA + ' ' + littleA
 		for x in range(i, len(variation)): #Use x here to iterate through the list, using i as the start in the range to prevent comparing preceding polymorphisms
 			#print x
 			testPolyList = [] #Initialise list to be used to compare the nucleotides at the second polymorphic site
@@ -280,11 +282,16 @@ def calcLinkageDisequilibrium(allPolymorphisms, sequences, file):
 				paB = 1.0
 			if littleA == littleB:
 				pab = 1.0
-			#print 'A = %s' % bigA
-			#print 'B = %s' % bigB
-			#print 'b = %s' % littleB
-			#print 'a = %s' % littleA
-			#print basePolyList
+			print 'A = %s' % bigA
+			print 'B = %s' % bigB
+			print 'b = %s' % littleB
+			print 'a = %s' % littleA
+			print basePolyList
+
+def newCalcLinkageDisequilibrium(nonSynPolymorphisms, synPolymorphisms):
+	'''Takes a list of the Non Synonymous Polymorhisms and a list of the Synonymous Polymorphisms'''
+	print 'Does nothing'
+
 
 def getNonSynonymousPolymorphisms(allSeqAA):
 	'''Takes a list of a list of Amino Acids (i.e. [[Gln, Asp...],[Asp, Glu...]]).
@@ -364,7 +371,6 @@ def categorisePolymorphisms(allSeqCodons):
 										nonSynPolymorphisms[x] = (baseSeqCodonAA, testSeqCodonAA)
 	return (synPolymorphisms, nonSynPolymorphisms)
 
-
 def iterateFiles(dir):
 	'''Takes the path to a directory and iterates over the files in it, passing each one
 	to getSequences() and getVariation(). It then returns a string for the number of
@@ -428,20 +434,29 @@ def chooseSequenceData():
 def main():
 	#chosenBacteriaDir = chooseSequenceData()
 	#print chosenBacteriaDir
-	if os.name == 'nt': #If on windows, open this tester file
-		fileObject = openFile('F:\USER FILES\Dropbox\Dropbox\Biomedicine\Yr 3\FYP\Bifidobacterium animalis lactis\ortholog_000397.nt_ali.Bifidobacteriumanimalissubsplactis.fasta')
-	elif os.name == 'posix': #If on mac, open this tester file
-		fileObject = openFile('/Users/robert/Dropbox/Biomedicine/Yr 3/FYP/Sequence Data/Chlamydia psittaci/ortholog_000004.nt_ali.fasta')
+	#if os.name == 'nt': #If on windows, open this tester file
+		#fileObject = openFile('F:\USER FILES\Dropbox\Dropbox\Biomedicine\Yr 3\FYP\Bifidobacterium animalis lactis\ortholog_000397.nt_ali.Bifidobacteriumanimalissubsplactis.fasta')
+	#elif os.name == 'posix': #If on mac, open this tester file
+		#fileObject = openFile('/Users/robert/Dropbox/Biomedicine/Yr 3/FYP/Sequence Data/Chlamydia psittaci/ortholog_000004.nt_ali.fasta')
+	fileObject = openFile('/home/robert/FYPsequences/Propionibacterium acnes/ortholog_000553.nt_ali.fasta')
 	sequences = getSequences(fileObject)
 	#print sequences
 	#for sequence in sequences:
 	#	print len(sequence)
-	allSeqCodons = getAllCodons(sequences)
-	allPolymorphisms = categorisePolymorphisms(allSeqCodons)
-	synPolymorphisms = allPolymorphisms[0]
-	nonSynPolymorphisms = allPolymorphisms[1]
-	calcLinkageDisequilibrium(allPolymorphisms, sequences, file)
+	#allSeqCodons = getAllCodons(sequences)
+	#allPolymorphisms = categorisePolymorphisms(allSeqCodons)
+	#synPolymorphisms = allPolymorphisms[0]
+	#nonSynPolymorphisms = allPolymorphisms[1]
+	#calcLinkageDisequilibrium(allPolymorphisms, sequences, file)
 	#variation = getVariation(sequences)
+	#print variation
+	#for variationIndex in variation:
+	#	currentIndexPoly = []
+	#	for sequence in sequences:
+	#		if sequence[variationIndex] not in currentIndexPoly:
+	#			currentIndexPoly.append(sequence[variationIndex])
+#	#	print '%s: %s' % (variationIndex, str(currentIndexPoly))
+		
 	#allCodons = getAllCodons(sequences)
 	#print allCodons
 	#allAminoAcids = getAllAminoAcids(allCodons)
@@ -457,8 +472,8 @@ def main():
 	#print getVariation(sequences)
 	#print seqNuc
 	#print seqHeader
-	#iterateFiles('/Users/robert/Dropbox/Biomedicine/Yr 3/FYP/Sequence Data/Chlamydia psittaci/') #Calculates for all the files in the bifidobacterium folder
-	#calcLinkageDisequilibrium(variation, sequences)
+	iterateFiles('/home/robert/FYPsequences/Propionibacterium acnes/') #Calculates for all the files in the bifidobacterium folder
+	#print calcLinkageDisequilibrium(variation, sequences, 'Ortholog_000553.nt_ali.fasta')
 	
 if __name__ == '__main__':
 	main()
