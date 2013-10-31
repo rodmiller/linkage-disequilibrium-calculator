@@ -30,6 +30,7 @@ and P(AB)..etc are the frequencies of the haplotypes (chromosomes) carrying the 
 '''
 
 import os #For looping through files in a dir and determining system os for file to load
+import csv #For writing to csv files in order to make a graph in calc
 
 #A dictionary for mapping nucleotide codons to their respective amino acids. 
 aminoAcidCodons = {
@@ -236,6 +237,12 @@ def calcLinkageDisequilibrium(variation, sequences, file):
 	where D = P(AB) - P(A)P(B)
 	NEEDS REWRITE ASAP
 	'''
+	#testSeq = ['ATAACA', 'AAAAGA', 'ATAACA', 'AAAACA']
+	#testVariation = [1, 4]
+	#for debug only...
+	#variation = testVariation
+	#sequences = testSeq
+	
 	for i in range(len(variation)): #Use i to be sure we only compare polymorphisms occurring after the current one in the list
 		basePolyList = [] #Initialise list to be used to compare the nucleotides at the first polymorphic site
 		for sequence in sequences: #For each sequence in the list of sequences
@@ -249,7 +256,7 @@ def calcLinkageDisequilibrium(variation, sequences, file):
 		#	print 'Too many polymorphisms at this site to work with'
 		#	break #Break back to next polymorphism index in file
 		#else:
-		print basePolyList
+		#print basePolyList
 		bigA = basePolyList[0] #First one to come across is bigA
 		for basePoly in basePolyList:
 			if basePoly != bigA:
@@ -288,10 +295,144 @@ def calcLinkageDisequilibrium(variation, sequences, file):
 			print 'a = %s' % littleA
 			print basePolyList
 
-def newCalcLinkageDisequilibrium(nonSynPolymorphisms, synPolymorphisms):
+def newCalcLinkageDisequilibrium(variation, sequences):
 	'''Takes a list of the Non Synonymous Polymorhisms and a list of the Synonymous Polymorphisms'''
-	print 'Does nothing'
+	variationNucleotides = {} #Initialise the dictionary used to collate the possible nucleotides at each site. In the format {polymorphism index: [nucleotide 1, nucleotide 2], ...}
+	allPossibleNucleotides = {} #Initialise the dictionary used to list all the nucleotides at each site without ommitting duplicates
+	#sequences = ['CA', 'CG', 'TG', 'CG', 'TG', 'TA']
+	#variation = [0, 1]
+	distanceAndLd = {}
+	for x in range(len(variation)): #Prevent str index out of range errors in variation and maintain same index throughout
+		variationNucleotides[variation[x]] = [] #Initialise the list for each polymorphism index encountered
+		for sequence in sequences: #Then go through each sequence in turn
+			
+			#if sequence[variation[x]] not in variationNucleotides[variation[x]]: #Only add it to the list if the nucleotide isn't already there
+			variationNucleotides[variation[x]].append(sequence[variation[x]]) # Add it to the list
+		for variationNucleotide in variationNucleotides: #Iterate
+			currentNuc = []
+			if variationNucleotide not in currentNuc:
+				currentNuc.append(variationNucleotides[variationNucleotide])
+			if len(currentNuc) > 2: #Remove complex cases w/ more than 2 nucleotides at each site
+				del(variationNucleotide) # If len >2 delete the entry
+	#print variationNucleotides #Print out the dictionary
+	#Now finished creating the dictionary of the polymorphisms. Now iterate through it and do pairwise comparisons
+	for basePolyIndex in variationNucleotides:
+		for testPolyIndex in variationNucleotides:
+			ldEquationR2 = None
+			bigA = None
+			del(bigA)
+			bigB = None
+			del(bigB)
+			littleA = None
+			del(littleA)
+			littleB = None
+			del(littleB)
+			if testPolyIndex == basePolyIndex:
+				break
+			distanceBetween = testPolyIndex - basePolyIndex
+			for baseNuc in variationNucleotides[basePolyIndex]:
+				try:
+					bigA
+				except NameError:
+					#print 'Setting BigA to %s' % baseNuc
+					bigA = baseNuc
+				else:
+					if baseNuc != bigA:
+						littleA = baseNuc
+				#print '-----------bigA Chosen %s, baseNuc is %s. From %s' % (bigA, baseNuc, variationNucleotides[basePolyIndex])
+				for testNuc in variationNucleotides[testPolyIndex]:
+					try:
+						bigB
+					except:
+						bigB = testNuc
+					else:
+						#print bigB
+						if testNuc != bigB:
+							littleB = testNuc
+					#print 'bigB Chosen %s, testNuc is %s. From %s' % (bigB, testNuc, variationNucleotides[testPolyIndex])
+				
 
+			#Now work out some probabilities
+			basePolyIndexTotal = len(variationNucleotides[basePolyIndex])
+			testPolyIndexTotal = len(variationNucleotides[testPolyIndex])
+			#print '%s %s' % (basePolyIndexTotal, testPolyIndexTotal)
+			#print variationNucleotides
+			bigACount = variationNucleotides[basePolyIndex].count(bigA)
+			littleACount = variationNucleotides[basePolyIndex].count(littleA)
+			bigBCount = variationNucleotides[testPolyIndex].count(bigB)
+			littleBCount = variationNucleotides[testPolyIndex].count(littleB)
+			#print '%s %s %s %s' % (bigACount, littleACount, bigBCount, littleBCount)
+			pBigA = float(bigACount)/float(basePolyIndexTotal)
+			pLittleA = float(littleACount)/float(basePolyIndexTotal)
+			pBigB = float(bigBCount)/float(testPolyIndexTotal)
+			pLittleB = float(littleBCount)/float(testPolyIndexTotal)
+			
+			#Now moving onto the more complex 2 part probabilities
+			#Finding pAB
+			countAB = 0
+			for i in range(basePolyIndexTotal):
+				baseNuc = variationNucleotides[basePolyIndex][i]
+				if baseNuc == bigA:
+					testNuc = variationNucleotides[testPolyIndex][i]
+					if testNuc == bigB:
+						countAB = countAB + 1
+			pAB = float(countAB)/float(basePolyIndexTotal)
+			#print 'pAB is ' + str(pAB)
+			#Finding pAb
+			countAb = 0
+			for i in range(basePolyIndexTotal):
+				baseNuc = variationNucleotides[basePolyIndex][i]
+				if baseNuc == bigA:
+					testNuc = variationNucleotides[testPolyIndex][i]
+					#print 'BaseNuc is %s, testNuc is %s' % (baseNuc, testNuc)
+					if testNuc == littleB:
+						countAb = countAb + 1
+			#print 'countAb is ' + str(countAb)
+			pAb = float(countAb)/float(basePolyIndexTotal)
+			#print 'pAb is ' + str(pAb)
+			#Finding paB
+			countaB = 0
+			for i in range(basePolyIndexTotal):
+				baseNuc = variationNucleotides[basePolyIndex][i]
+				if baseNuc == littleA:
+					testNuc = variationNucleotides[testPolyIndex][i]
+					if testNuc == bigB:
+						countaB = countaB + 1
+			paB = float(countaB)/float(basePolyIndexTotal)
+			#print 'paB is ' + str(paB)
+			#Finding pab
+			countab = 0
+			for i in range(basePolyIndexTotal):
+				baseNuc = variationNucleotides[basePolyIndex][i]
+				if baseNuc == littleA:
+					testNuc = variationNucleotides[testPolyIndex][i]
+					if testNuc == littleB:
+						countab = countab + 1
+			pab = float(countab)/float(basePolyIndexTotal)
+			#print 'pab is ' + str(pab)
+			#Now do the calculation
+			ldEquationD = pAB - pBigA * pBigB
+			#print ldEquationD
+			ldEquationR2Bottom = pAB * pAb * paB * pab
+			if ldEquationR2Bottom != 0:
+				ldEquationR2 = (ldEquationD**2)/ldEquationR2Bottom
+				#print ldEquationR2
+			#if(ldEquationR2 != None):
+			#	print '------------ %s to %s: A=%s a=%s B=%s b=%s' % (basePolyIndex, testPolyIndex, bigA, littleA, bigB, littleB)
+			#	print 'Base Seq ' + str(variationNucleotides[basePolyIndex])
+			#	print 'Test Seq ' + str(variationNucleotides[testPolyIndex])
+			#	print 'pA=%s pa=%s pB=%s pb=%s' % (pBigA, pLittleA, pBigB, pLittleB)
+			#	print 'pAB=%s pAb=%s paB=%s pab=%s' % (pAB, pAb, paB, pab)
+			#	print 'LD is ' + str(ldEquationR2)
+				try:
+					distanceAndLd[str(abs(distanceBetween))]
+				except:
+					distanceAndLd[str(abs(distanceBetween))] = [str(ldEquationR2)]
+				else:
+					distanceAndLd[str(abs(distanceBetween))].append(str(ldEquationR2))
+	return distanceAndLd
+			
+			
 
 def getNonSynonymousPolymorphisms(allSeqAA):
 	'''Takes a list of a list of Amino Acids (i.e. [[Gln, Asp...],[Asp, Glu...]]).
@@ -335,6 +476,19 @@ def getSynonymousPolymorphisms(allSeqCodons):
 								#print 'Found the same codon, its ' + aminoAcid
 								synPolymorphisms[x] = (baseSeqCodons[x], testSeqCodons[x]) #Append it to the dictionary
 	return synPolymorphisms	
+
+def getLinkageDisequilibrium(synPolymorphisms, nonSynPolymorphisms, allSeqCodons):
+	'''Takes a list of synonymous polymorhisms and a list of non-synonymous
+	polymorhisms and the sequence data. Then iterates through each list in
+	turn, finding the exact polymorphic nucleotide and then adding it to a 
+	list for the sequence'''
+	for seqCodons in allSeqCodons: #Get the individual sequence of codons in the file
+		for synPolyIndex in synPolymorhisms: #Get each index for the polymorphisms 
+			print 'Does nothing'
+		print 'Does Nothing'
+	return
+
+
 		
 def categorisePolymorphisms(allSeqCodons):
 	'''Takes a list of a list of codons (i.e. [[AGC, TAG...],[TGC, CGT...]])
@@ -384,18 +538,26 @@ def iterateFiles(dir):
 			sequences = getSequences(fileObject) #Breaks the file down into sequences
 			variation = getVariation(sequences) #Works out the variation for each sequence
 			#print variation
-			allCodons = getAllCodons(sequences)
+			#allCodons = getAllCodons(sequences)
 			#print allCodons
-			allAminoAcids = getAllAminoAcids(allCodons)
+			#allAminoAcids = getAllAminoAcids(allCodons)
 			#print allAminoAcids
-			nonSynPoly = getNonSynonymousPolymorphisms(allAminoAcids)
-			synPoly = getSynonymousPolymorphisms(allCodons)
-			if variation and len(variation) != len(nonSynPoly)+len(synPoly):
-				print '-------------------------'
-				print '%s => %s variation and %s polys' % (file, len(variation), str(len(nonSynPoly)+len(synPoly)))
-				print 'Variation: %s' % variation
-				print 'nonSynPoly: %s' % nonSynPoly
-				print 'synPoly: %s' % synPoly
+			#nonSynPoly = getNonSynonymousPolymorphisms(allAminoAcids)
+			#synPoly = getSynonymousPolymorphisms(allCodons)
+			#if variation and len(variation) != len(nonSynPoly)+len(synPoly):
+			#	print '-------------------------'
+			#	print '%s => %s variation and %s polys' % (file, len(variation), str(len(nonSynPoly)+len(synPoly)))
+			#	print 'Variation: %s' % variation
+			#	print 'nonSynPoly: %s' % nonSynPoly
+			#	print 'synPoly: %s' % synPoly
+			distanceAndLd = newCalcLinkageDisequilibrium(variation, sequences)
+			ldWriter = open('./ld.csv', 'w')
+						
+			for k,v in distanceAndLd.items():
+				for value in v:
+					print str(k) + ',' + str(value)
+				#print str(k) + ',' + str(v)
+				
 			
 	#		if len(variation)==1: #If only one polymorphism
 	#			print '%s --> %s polymorphism. Location is: %s' % (file[9:15], len(variation), str(variation))
@@ -448,7 +610,7 @@ def main():
 	#synPolymorphisms = allPolymorphisms[0]
 	#nonSynPolymorphisms = allPolymorphisms[1]
 	#calcLinkageDisequilibrium(allPolymorphisms, sequences, file)
-	#variation = getVariation(sequences)
+	variation = getVariation(sequences)
 	#print variation
 	#for variationIndex in variation:
 	#	currentIndexPoly = []
@@ -473,7 +635,8 @@ def main():
 	#print seqNuc
 	#print seqHeader
 	iterateFiles('/home/robert/FYPsequences/Propionibacterium acnes/') #Calculates for all the files in the bifidobacterium folder
-	#print calcLinkageDisequilibrium(variation, sequences, 'Ortholog_000553.nt_ali.fasta')
+	#newCalcLinkageDisequilibrium(variation, sequences)
+	#print sequences
 	
 if __name__ == '__main__':
 	main()
