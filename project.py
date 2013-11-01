@@ -31,6 +31,7 @@ and P(AB)..etc are the frequencies of the haplotypes (chromosomes) carrying the 
 
 import os #For looping through files in a dir and determining system os for file to load
 import csv #For writing to csv files in order to make a graph in calc
+import math #For doing math.floor
 
 #A dictionary for mapping nucleotide codons to their respective amino acids. 
 aminoAcidCodons = {
@@ -301,7 +302,8 @@ def newCalcLinkageDisequilibrium(variation, sequences):
 	allPossibleNucleotides = {} #Initialise the dictionary used to list all the nucleotides at each site without ommitting duplicates
 	#sequences = ['CA', 'CG', 'TG', 'CG', 'TG', 'TA']
 	#variation = [0, 1]
-	distanceAndLd = {}
+	distanceAndLdSyn = {}
+	distanceAndLdNonSyn = {}
 	for x in range(len(variation)): #Prevent str index out of range errors in variation and maintain same index throughout
 		variationNucleotides[variation[x]] = [] #Initialise the list for each polymorphism index encountered
 		for sequence in sequences: #Then go through each sequence in turn
@@ -316,6 +318,10 @@ def newCalcLinkageDisequilibrium(variation, sequences):
 				del(variationNucleotide) # If len >2 delete the entry
 	#print variationNucleotides #Print out the dictionary
 	#Now finished creating the dictionary of the polymorphisms. Now iterate through it and do pairwise comparisons
+	allSeqCodons = getAllCodons(sequences)
+	allSeqAA = getAllAminoAcids(allSeqCodons)
+	synPoly = getSynonymousPolymorphisms(allSeqCodons)
+	nonSynPoly = getNonSynonymousPolymorphisms(allSeqAA)
 	for basePolyIndex in variationNucleotides:
 		for testPolyIndex in variationNucleotides:
 			ldEquationR2 = None
@@ -410,12 +416,20 @@ def newCalcLinkageDisequilibrium(variation, sequences):
 						countab = countab + 1
 			pab = float(countab)/float(basePolyIndexTotal)
 			#print 'pab is ' + str(pab)
+
+			#Work out if its synonymous or nonsynonymous
+			
+			synOrNonSyn =  chooseSynOrNonSynPoly(basePolyIndex, sequences, synPoly, nonSynPoly)
+			#print synOrNonSyn
+			if synOrNonSyn == 'syn':
+				#print 'doing the calc'
 			#Now do the calculation
-			ldEquationD = pAB - pBigA * pBigB
+				ldEquationD = pAB - pBigA * pBigB
 			#print ldEquationD
-			ldEquationR2Bottom = pAB * pAb * paB * pab
-			if ldEquationR2Bottom != 0:
-				ldEquationR2 = (ldEquationD**2)/ldEquationR2Bottom
+				ldEquationR2Bottom = pAB * pAb * paB * pab
+				#print ldEquationR2Bottom
+				if ldEquationR2Bottom != 0:
+					ldEquationR2 = (ldEquationD**2)/ldEquationR2Bottom
 				#print ldEquationR2
 			#if(ldEquationR2 != None):
 			#	print '------------ %s to %s: A=%s a=%s B=%s b=%s' % (basePolyIndex, testPolyIndex, bigA, littleA, bigB, littleB)
@@ -424,15 +438,57 @@ def newCalcLinkageDisequilibrium(variation, sequences):
 			#	print 'pA=%s pa=%s pB=%s pb=%s' % (pBigA, pLittleA, pBigB, pLittleB)
 			#	print 'pAB=%s pAb=%s paB=%s pab=%s' % (pAB, pAb, paB, pab)
 			#	print 'LD is ' + str(ldEquationR2)
-				try:
-					distanceAndLd[str(abs(distanceBetween))]
-				except:
-					distanceAndLd[str(abs(distanceBetween))] = [str(ldEquationR2)]
-				else:
-					distanceAndLd[str(abs(distanceBetween))].append(str(ldEquationR2))
-	return distanceAndLd
+					try:
+						distanceAndLdSyn[str(abs(distanceBetween))]
+					except:
+						distanceAndLdSyn[str(abs(distanceBetween))] = [str(ldEquationR2)]
+					else:
+						distanceAndLdSyn[str(abs(distanceBetween))].append(str(ldEquationR2))
+			elif synOrNonSyn == 'nonSyn':
+				#print 'doing the calc'
+			#Now do the calculation
+				ldEquationD = pAB - pBigA * pBigB
+			#print ldEquationD
+				ldEquationR2Bottom = pAB * pAb * paB * pab
+				#print ldEquationR2Bottom
+				if ldEquationR2Bottom != 0:
+					ldEquationR2 = (ldEquationD**2)/ldEquationR2Bottom
+				#print ldEquationR2
+			#if(ldEquationR2 != None):
+			#	print '------------ %s to %s: A=%s a=%s B=%s b=%s' % (basePolyIndex, testPolyIndex, bigA, littleA, bigB, littleB)
+			#	print 'Base Seq ' + str(variationNucleotides[basePolyIndex])
+			#	print 'Test Seq ' + str(variationNucleotides[testPolyIndex])
+			#	print 'pA=%s pa=%s pB=%s pb=%s' % (pBigA, pLittleA, pBigB, pLittleB)
+			#	print 'pAB=%s pAb=%s paB=%s pab=%s' % (pAB, pAb, paB, pab)
+			#	print 'LD is ' + str(ldEquationR2)
+					try:
+						distanceAndLdNonSyn[str(abs(distanceBetween))]
+					except:
+						distanceAndLdNonSyn[str(abs(distanceBetween))] = [str(ldEquationR2)]
+					else:
+						distanceAndLdNonSyn[str(abs(distanceBetween))].append(str(ldEquationR2))
+	return (distanceAndLdSyn, distanceAndLdNonSyn)
 			
-			
+def chooseSynOrNonSynPoly(variationIndex, sequences, synPolymorphisms, nonSynPolymorphisms):
+	#seqAllCodons = getAllCodons(sequences)
+	#seqAllAA = getAllAminoAcids(seqAllCodons)
+	variationCodonIndex = math.floor(float(variationIndex)/3)
+	#print '-------------------'
+	#print 'SynPoly = ' + str(synPolymorphisms)
+	#print 'NonSynPoly = ' + str(nonSynPolymorphisms)
+	#print variationCodonIndex
+	if int(variationCodonIndex) in synPolymorphisms:
+		#print 'Its a Synonymous Poly'
+		return 'syn'
+	elif int(variationCodonIndex) in nonSynPolymorphisms:
+		#print 'Its a Non Synonymous Poly'
+		return 'nonSyn'
+	else:
+		#print 'Couldnt find the poly in the list :('
+		return None
+
+	
+
 
 def getNonSynonymousPolymorphisms(allSeqAA):
 	'''Takes a list of a list of Amino Acids (i.e. [[Gln, Asp...],[Asp, Glu...]]).
@@ -531,6 +587,14 @@ def iterateFiles(dir):
 	polymorphisms and their location within the file.'''
 	files = os.listdir(dir) #Lists the files in the supplied dir. 
 	#print files
+	#os.remove('./syn.csv')
+	#os.remove('./nonSyn.csv')
+	f = open('./syn.csv', 'w')
+	f.close()
+	f = open('./syn.csv', 'a')
+	f2 = open('./nonSyn.csv', 'w')
+	f2.close()
+	f2 = open('./nonSyn.csv', 'a')
 	for file in files: #Iterates through each file in the list of files
 		#print file
 		fileObject = openFile(dir + file) #Opens the file chosen using openFile()
@@ -551,11 +615,17 @@ def iterateFiles(dir):
 			#	print 'nonSynPoly: %s' % nonSynPoly
 			#	print 'synPoly: %s' % synPoly
 			distanceAndLd = newCalcLinkageDisequilibrium(variation, sequences)
-			ldWriter = open('./ld.csv', 'w')
 						
-			for k,v in distanceAndLd.items():
+			for k,v in distanceAndLd[0].items():
 				for value in v:
-					print str(k) + ',' + str(value)
+					print 'Syn: %s => %s' % (str(k), str(value))
+					f.write(str(k) + ',' + str(value) + '\n')
+			
+			for k,v in distanceAndLd[1].items():
+				for value in v:
+					print 'nonSyn: %s => %s' % (str(k), str(value))
+					f2.write(str(k) + ',' + str(value) + '\n')
+			
 				#print str(k) + ',' + str(v)
 				
 			
@@ -634,7 +704,7 @@ def main():
 	#print getVariation(sequences)
 	#print seqNuc
 	#print seqHeader
-	iterateFiles('/home/robert/FYPsequences/Propionibacterium acnes/') #Calculates for all the files in the bifidobacterium folder
+	iterateFiles('/home/robert/DataSets/Corynebacterium diptheriae/') #Calculates for all the files in the chosen folder
 	#newCalcLinkageDisequilibrium(variation, sequences)
 	#print sequences
 	
