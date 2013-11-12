@@ -32,6 +32,7 @@ and P(AB)..etc are the frequencies of the haplotypes (chromosomes) carrying the 
 import os #For looping through files in a dir and determining system os for file to load
 import csv #For writing to csv files in order to make a graph in calc
 import math #For doing math.floor
+import matplotlib.pyplot as plt #For plotting the graphs!
 
 #A dictionary for mapping nucleotide codons to their respective amino acids. 
 aminoAcidCodons = {
@@ -453,6 +454,7 @@ def newCalcLinkageDisequilibrium(variation, sequences):
 				#print ldEquationR2Bottom
 				if ldEquationR2Bottom != 0:
 					ldEquationR2 = (ldEquationD**2)/ldEquationR2Bottom
+					print '--- Below poly eq is: %s / %s = %s' % (str(ldEquationD), str(ldEquationR2Bottom), str(ldEquationR2))
 				#print ldEquationR2
 			#if(ldEquationR2 != None):
 			#	print '------------ %s to %s: A=%s a=%s B=%s b=%s' % (basePolyIndex, testPolyIndex, bigA, littleA, bigB, littleB)
@@ -581,7 +583,7 @@ def categorisePolymorphisms(allSeqCodons):
 										nonSynPolymorphisms[x] = (baseSeqCodonAA, testSeqCodonAA)
 	return (synPolymorphisms, nonSynPolymorphisms)
 
-def iterateFiles(dir):
+def iterateFiles(dir, bacteriaName):
 	'''Takes the path to a directory and iterates over the files in it, passing each one
 	to getSequences() and getVariation(). It then returns a string for the number of
 	polymorphisms and their location within the file.'''
@@ -589,16 +591,21 @@ def iterateFiles(dir):
 	#print files
 	#os.remove('./syn.csv')
 	#os.remove('./nonSyn.csv')
-	f = open('./syn.csv', 'w')
-	f.close()
-	f = open('./syn.csv', 'a')
-	f2 = open('./nonSyn.csv', 'w')
-	f2.close()
-	f2 = open('./nonSyn.csv', 'a')
+	#f = open('./syn.csv', 'w')
+	#f.close()
+	#f = open('./syn.csv', 'a')
+	#f2 = open('./nonSyn.csv', 'w')
+	#f2.close()
+	#f2 = open('./nonSyn.csv', 'a')
+	distanceValuesSyn = []
+	ldValuesSyn = []
+	distanceValuesNonSyn = []
+	ldValuesNonSyn = []
 	for file in files: #Iterates through each file in the list of files
 		#print file
 		fileObject = openFile(dir + file) #Opens the file chosen using openFile()
 		if fileObject:
+			print '--------- %s' % file
 			sequences = getSequences(fileObject) #Breaks the file down into sequences
 			variation = getVariation(sequences) #Works out the variation for each sequence
 			#print variation
@@ -615,16 +622,23 @@ def iterateFiles(dir):
 			#	print 'nonSynPoly: %s' % nonSynPoly
 			#	print 'synPoly: %s' % synPoly
 			distanceAndLd = newCalcLinkageDisequilibrium(variation, sequences)
-						
+			
 			for k,v in distanceAndLd[0].items():
 				for value in v:
+					distanceValuesSyn.append(k)
+					ldValuesSyn.append(value)
 					print 'Syn: %s => %s' % (str(k), str(value))
-					f.write(str(k) + ',' + str(value) + '\n')
+					#f.write(str(k) + ',' + str(value) + '\n')
 			
 			for k,v in distanceAndLd[1].items():
 				for value in v:
+					distanceValuesNonSyn.append(k)
+					ldValuesNonSyn.append(value)
 					print 'nonSyn: %s => %s' % (str(k), str(value))
-					f2.write(str(k) + ',' + str(value) + '\n')
+					#f2.write(str(k) + ',' + str(value) + '\n')
+					
+			
+			
 			
 				#print str(k) + ',' + str(v)
 				
@@ -635,6 +649,47 @@ def iterateFiles(dir):
 	##			print '%s --> No Polymorphisms' % (file)
 	#		elif len(variation) > 1: #If more than one polymorphism
 	#			print '%s --> %s polymorphisms. Locations are: %s' % (file[9:15], len(variation), str(variation))
+	print 'Syn: %s , %s' % (str(distanceValuesSyn), str(ldValuesSyn))
+	print 'Non Syn: %s, %s' % (str(distanceValuesNonSyn), str(ldValuesNonSyn))
+	#plt.plot(distanceValuesSyn, ldValuesSyn, 'ro')
+	#plt.plot(distanceValuesNonSyn, ldValuesNonSyn, 'bo')
+	#plt.ylabel('Linkage Disequilibrium')
+	#plt.xlabel('Distance (nucleotides)')
+	#plt.show()
+	#while True:
+	#	print 'Current limits are ' + str(plt.axis())
+	#	xmin = raw_input('Minimum on X-axis--> ')
+	#	xmax = raw_input('Maximum on X-axis--> ')
+	#	ymin = raw_input('Minimum on Y-axis--> ')
+	#	ymax = raw_input('Maximum on Y-axis--> ')
+	#	print '%s, %s, %s, %s' % (xmin, xmax, ymin, ymax)
+	#	yorn = raw_input('Happy with these values? (y or n)')
+	#	if yorn[0] == 'y':
+	#		break
+	plt.plot(distanceValuesSyn, ldValuesSyn, 'ro')
+	plt.plot(distanceValuesNonSyn, ldValuesNonSyn, 'bo')
+	plt.ylabel('Linkage Disequilibrium')
+	plt.xlabel('Distance (nucleotides)')
+	plt.show()
+	xPos = raw_input('X position of text labels --> ')
+	synYPos = raw_input('Y Position of top text label --> ')
+	nSynYPos = raw_input('Y Position of bottom text label --> ')
+
+	plt.plot(distanceValuesSyn, ldValuesSyn, 'ro')
+	plt.plot(distanceValuesNonSyn, ldValuesNonSyn, 'bo')
+	plt.ylabel('Linkage Disequilibrium')
+	plt.xlabel('Distance (nucleotides)')
+	chooseChange = raw_input('Change the scale? (y/n) --> ')
+	if chooseChange == 'y':
+		axesScale = raw_input('Whats the borders then? [xmin, xmax, ymin, ymax] --> ')
+		plt.axis(axesScale)
+	plt.text(xPos, synYPos, 'Synonymous', color='r')
+	plt.text(xPos, nSynYPos, 'Non Synonymous', color='b')
+	plt.title(bacteriaName)
+	plt.suptitle('A graph of Linkage Disequilibrium Against Loci Distance')
+	plt.savefig(bacteriaName + '.pdf')
+	return ((distanceValuesSyn, ldValuesSyn), (distanceValuesNonSyn, ldValuesNonSyn))
+		
 		
 def chooseSequenceData():
 	'''Prompts the user to select a bacterium from a list of folder in a location on the
@@ -669,9 +724,9 @@ def main():
 	#if os.name == 'nt': #If on windows, open this tester file
 		#fileObject = openFile('F:\USER FILES\Dropbox\Dropbox\Biomedicine\Yr 3\FYP\Bifidobacterium animalis lactis\ortholog_000397.nt_ali.Bifidobacteriumanimalissubsplactis.fasta')
 	#elif os.name == 'posix': #If on mac, open this tester file
-		#fileObject = openFile('/Users/robert/Dropbox/Biomedicine/Yr 3/FYP/Sequence Data/Chlamydia psittaci/ortholog_000004.nt_ali.fasta')
-	fileObject = openFile('/home/robert/FYPsequences/Propionibacterium acnes/ortholog_000553.nt_ali.fasta')
-	sequences = getSequences(fileObject)
+	#fileObject = openFile('/Users/robert/Dropbox/Biomedicine/Yr 3/FYP/Sequence Data/Chlamydia psittaci/ortholog_000004.nt_ali.fasta')
+	#fileObject = openFile('/home/robert/FYPsequences/Propionibacterium acnes/ortholog_000553.nt_ali.fasta')
+	#sequences = getSequences(fileObject)
 	#print sequences
 	#for sequence in sequences:
 	#	print len(sequence)
@@ -680,7 +735,7 @@ def main():
 	#synPolymorphisms = allPolymorphisms[0]
 	#nonSynPolymorphisms = allPolymorphisms[1]
 	#calcLinkageDisequilibrium(allPolymorphisms, sequences, file)
-	variation = getVariation(sequences)
+	#variation = getVariation(sequences)
 	#print variation
 	#for variationIndex in variation:
 	#	currentIndexPoly = []
@@ -704,9 +759,18 @@ def main():
 	#print getVariation(sequences)
 	#print seqNuc
 	#print seqHeader
-	iterateFiles('/home/robert/DataSets/Corynebacterium diptheriae/') #Calculates for all the files in the chosen folder
-	#newCalcLinkageDisequilibrium(variation, sequences)
-	#print sequences
+	bacteriaName = raw_input('Bacteria Name: ')
+	iterateFiles('/Users/robert/Dropbox/Biomedicine/Yr 3/FYP/Sequence Data/' + bacteriaName + '/', bacteriaName) #Calculates for all the files in the chosen folder
+	#ld = newCalcLinkageDisequilibrium(variation, sequences)
+	#print sequences0
+	#distanceValuesSyn = ld[0][0]
+	#ldValuesSyn = ld[0][1]
+	#distanceValuesNonSyn = ld[1][0]
+	#ldValuesNonSyn = ld[1][1]
+	
+	#plt.acorr( #Add some correlation somehow!)
+	#plt.show()
+	
 	
 if __name__ == '__main__':
 	main()
