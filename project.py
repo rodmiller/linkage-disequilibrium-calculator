@@ -33,6 +33,8 @@ import os #For looping through files in a dir and determining system os for file
 import csv #For writing to csv files in order to make a graph in calc
 import math #For doing math.floor
 import matplotlib.pyplot as plt #For plotting the graphs!
+import sys #For getting command line arguments
+import time #For sleeping the program for a few secs for emphasis
 
 #A dictionary for mapping nucleotide codons to their respective amino acids. 
 aminoAcidCodons = {
@@ -454,7 +456,7 @@ def newCalcLinkageDisequilibrium(variation, sequences):
 				#print ldEquationR2Bottom
 				if ldEquationR2Bottom != 0:
 					ldEquationR2 = (ldEquationD**2)/ldEquationR2Bottom
-					print '--- Below poly eq is: %s / %s = %s' % (str(ldEquationD), str(ldEquationR2Bottom), str(ldEquationR2))
+					#print '--- Below poly eq is: %s / %s = %s' % (str(ldEquationD), str(ldEquationR2Bottom), str(ldEquationR2))
 				#print ldEquationR2
 			#if(ldEquationR2 != None):
 			#	print '------------ %s to %s: A=%s a=%s B=%s b=%s' % (basePolyIndex, testPolyIndex, bigA, littleA, bigB, littleB)
@@ -502,7 +504,7 @@ def getNonSynonymousPolymorphisms(allSeqAA):
 	for baseSeqAA in allSeqAA: #The first sequence to compare the second to
 		for testSeqAA in allSeqAA: #The second sequence to compare the first to
 			if baseSeqAA != testSeqAA: #Only if the Amino Acids are different
-				for x in range(len(testSeqAA)): #Prevent str index out of range errors
+				for x in range(min(len(baseSeqAA), len(testSeqAA))): #Prevent str index out of range errors
 					#print '%s - %s' % (len(baseSeqAA), len(testSeqAA))
 					if baseSeqAA[x] != testSeqAA[x]: #Only print if the polymorphism is non-synonymous
 						#print '%s: %s -> %s' % (x, baseSeqAA[x], testSeqAA[x]) #Prints out the index: 1stAA->2ndAA
@@ -583,6 +585,25 @@ def categorisePolymorphisms(allSeqCodons):
 										nonSynPolymorphisms[x] = (baseSeqCodonAA, testSeqCodonAA)
 	return (synPolymorphisms, nonSynPolymorphisms)
 
+def iterateFolders(dir):
+	'''Takes the path to the sequence data folder and finds folders in this folder for each bacterium.
+	Then calls iterateFiles on each one of those folders'''
+	files = os.listdir(dir)
+	doneBacteria = []
+	for file in files:
+		if file[-3:] == 'pdf':
+			#pdfPath = '"' + dir + file + '"'
+			#dropboxUpload(pdfPath, '"/Biomedicine/Yr 3/FYP/Results for Adam/"')
+			doneBacteria.append(file[:-4])
+	#print 'Already done: ' + str(doneBacteria)
+	for file in files:
+		
+		if file not in doneBacteria and file[-3:] != 'pdf':
+			print '----- ' + file.upper() + ' -----'
+			dataPath = dir + file + '/'
+			iterateFiles(dataPath, file)		
+	return
+
 def iterateFiles(dir, bacteriaName):
 	'''Takes the path to a directory and iterates over the files in it, passing each one
 	to getSequences() and getVariation(). It then returns a string for the number of
@@ -605,7 +626,7 @@ def iterateFiles(dir, bacteriaName):
 		#print file
 		fileObject = openFile(dir + file) #Opens the file chosen using openFile()
 		if fileObject:
-			print '--------- %s' % file
+			#print '--------- %s' % file
 			sequences = getSequences(fileObject) #Breaks the file down into sequences
 			variation = getVariation(sequences) #Works out the variation for each sequence
 			#print variation
@@ -627,16 +648,19 @@ def iterateFiles(dir, bacteriaName):
 				for value in v:
 					distanceValuesSyn.append(k)
 					ldValuesSyn.append(value)
-					print 'Syn: %s => %s' % (str(k), str(value))
+					#print 'Syn: %s => %s' % (str(k), str(value))
 					#f.write(str(k) + ',' + str(value) + '\n')
 			
 			for k,v in distanceAndLd[1].items():
 				for value in v:
 					distanceValuesNonSyn.append(k)
 					ldValuesNonSyn.append(value)
-					print 'nonSyn: %s => %s' % (str(k), str(value))
+					#print 'nonSyn: %s => %s' % (str(k), str(value))
 					#f2.write(str(k) + ',' + str(value) + '\n')
-					
+			sys.stdout.write("%s => Syn: %s NonSyn: %s \r" % (str(file), str(len(ldValuesSyn)), str(len(ldValuesNonSyn))))
+			sys.stdout.flush()
+			#print 'Syn: %s' % len(ldValuesSyn)
+			#print 'Non Syn: %s' % len(ldValuesNonSyn)
 			
 			
 			
@@ -649,8 +673,8 @@ def iterateFiles(dir, bacteriaName):
 	##			print '%s --> No Polymorphisms' % (file)
 	#		elif len(variation) > 1: #If more than one polymorphism
 	#			print '%s --> %s polymorphisms. Locations are: %s' % (file[9:15], len(variation), str(variation))
-	print 'Syn: %s , %s' % (str(distanceValuesSyn), str(ldValuesSyn))
-	print 'Non Syn: %s, %s' % (str(distanceValuesNonSyn), str(ldValuesNonSyn))
+	#print 'Syn: %s , %s' % (str(distanceValuesSyn), str(ldValuesSyn))
+	#print 'Non Syn: %s, %s' % (str(distanceValuesNonSyn), str(ldValuesNonSyn))
 	#plt.plot(distanceValuesSyn, ldValuesSyn, 'ro')
 	#plt.plot(distanceValuesNonSyn, ldValuesNonSyn, 'bo')
 	#plt.ylabel('Linkage Disequilibrium')
@@ -666,28 +690,39 @@ def iterateFiles(dir, bacteriaName):
 	#	yorn = raw_input('Happy with these values? (y or n)')
 	#	if yorn[0] == 'y':
 	#		break
+	#plt.plot(distanceValuesSyn, ldValuesSyn, 'ro')
+	#plt.plot(distanceValuesNonSyn, ldValuesNonSyn, 'bo')
+	#plt.ylabel('Linkage Disequilibrium')
+	#plt.xlabel('Distance (nucleotides)')
+	#plt.show()
+	
+       	#synYPos = raw_input('Y Position of top text label --> ')
+	#nSynYPos = raw_input('Y Position of bottom text label --> ')
 	plt.plot(distanceValuesSyn, ldValuesSyn, 'ro')
 	plt.plot(distanceValuesNonSyn, ldValuesNonSyn, 'bo')
 	plt.ylabel('Linkage Disequilibrium')
 	plt.xlabel('Distance (nucleotides)')
-	plt.show()
-	xPos = raw_input('X position of text labels --> ')
-	synYPos = raw_input('Y Position of top text label --> ')
-	nSynYPos = raw_input('Y Position of bottom text label --> ')
-
-	plt.plot(distanceValuesSyn, ldValuesSyn, 'ro')
-	plt.plot(distanceValuesNonSyn, ldValuesNonSyn, 'bo')
-	plt.ylabel('Linkage Disequilibrium')
-	plt.xlabel('Distance (nucleotides)')
-	chooseChange = raw_input('Change the scale? (y/n) --> ')
-	if chooseChange == 'y':
-		axesScale = raw_input('Whats the borders then? [xmin, xmax, ymin, ymax] --> ')
-		plt.axis(axesScale)
+	#chooseChange = raw_input('Change the scale? (y/n) --> ')
+       	#if chooseChange == 'y':
+	#	axesScale = raw_input('Whats the borders then? [xmin, xmax, ymin, ymax] --> ')
+	#	plt.axis(axesScale)
+	plotAxes = plt.axis()
+	#print '--------------------------------------------- ' + str(plotAxes)
+	time.sleep(3)
+	xPos = 0.6*plotAxes[1]
+	synYPos = 0.9*plotAxes[3]
+	nSynYPos = 0.8*plotAxes[3]
 	plt.text(xPos, synYPos, 'Synonymous', color='r')
 	plt.text(xPos, nSynYPos, 'Non Synonymous', color='b')
 	plt.title(bacteriaName)
 	plt.suptitle('A graph of Linkage Disequilibrium Against Loci Distance')
+	print 'Writing graph file...',
 	plt.savefig(bacteriaName + '.pdf')
+	print ' Done.'
+	print 'Uploading to dropbox...'
+	pdfPath = '"' + dir[:-1] + '.pdf' + '"'
+	dropboxUpload(pdfPath, '"/Biomedicine/Yr 3/FYP/Results for Adam/"')
+	
 	return ((distanceValuesSyn, ldValuesSyn), (distanceValuesNonSyn, ldValuesNonSyn))
 		
 		
@@ -696,7 +731,7 @@ def chooseSequenceData():
 	hard drive, then returns a path to the folder containing the bacterium files'''
 	if os.name == 'nt': #On Windows
 		dirPrefix = 'F:\\USER FILES\\Dropbox\\Dropbox\\Biomedicine\\Yr 3\\FYP\\Sequence Data\\' #Choose this folder to get the sequence data from
-	elif os.name == 'posix': #On Mac
+	elif os.name == 'posix': #On Mac/Linux
 		dirPrefix = '/Users/robert/Dropbox/Biomedicine/Yr 3/FYP/Sequence Data/' #Choose this folder to get all the sequence data from
 	folderList = os.listdir(dirPrefix) #Gets all the file names in the prefix dir
 	bacteriaList = [] #Initialises a list for putting the bacteria names in
@@ -716,6 +751,10 @@ def chooseSequenceData():
 	chosenBacteria = bacteriaList[chosenBacteriaIndex] #Set chosenBacteria to the name of the bacteria chosen by the user
 	chosenBacteriaDir = dirPrefix + chosenBacteria + '/'
 	return chosenBacteriaDir
+
+def dropboxUpload(pdfPath, uploadPath):
+	'''Takes a path to a pdf file and a path to upload it to on Dropbox then runs dropbox_uploader.sh from the ~/ directory'''
+	os.system('~/dropbox_uploader.sh upload ' + pdfPath + ' ' + uploadPath)
 	
 	
 def main():
@@ -759,8 +798,18 @@ def main():
 	#print getVariation(sequences)
 	#print seqNuc
 	#print seqHeader
-	bacteriaName = raw_input('Bacteria Name: ')
-	iterateFiles('/Users/robert/Dropbox/Biomedicine/Yr 3/FYP/Sequence Data/' + bacteriaName + '/', bacteriaName) #Calculates for all the files in the chosen folder
+	if '-s' in sys.argv:
+		if os.geteuid() != 0:
+			exit("You need to have root privileges to run this script and shutdown after.\nPlease try again, this time using 'sudo'.")
+	iterateFolders('/home/robert/FYP/Sequence Data/')
+	if '-s' in sys.argv:
+		os.system('sudo shutdown -h now')
+		os.system('sudo shutdown -h 0')
+	#if sys.argv[1]:
+	#	bacteriaName = sys.argv[1]
+	#else:
+	#	bacteriaName = raw_input('Bacteria Name: ')
+	#iterateFiles('/home/robert/FYP/Sequence Data/' + bacteriaName + '/', bacteriaName) #Calculates for all the files in the chosen folder
 	#ld = newCalcLinkageDisequilibrium(variation, sequences)
 	#print sequences0
 	#distanceValuesSyn = ld[0][0]
