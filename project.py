@@ -32,7 +32,7 @@ and P(AB)..etc are the frequencies of the haplotypes (chromosomes) carrying the 
 import os #For looping through files in a dir and determining system os for file to load
 import csv #For writing to csv files in order to make a graph in calc
 import math #For doing math.floor
-import matplotlib.pyplot as plt #For plotting the graphs!
+import matplotlib.pyplot as plt #For plotting the graphs
 import sys #For getting command line arguments
 import time #For sleeping the program for a few secs for emphasis
 
@@ -313,18 +313,18 @@ def newCalcLinkageDisequilibrium(variation, sequences):
 			
 			#if sequence[variation[x]] not in variationNucleotides[variation[x]]: #Only add it to the list if the nucleotide isn't already there
 			variationNucleotides[variation[x]].append(sequence[variation[x]]) # Add it to the list
-		for variationNucleotide in variationNucleotides: #Iterate
-			currentNuc = []
+		for variationNucleotide in variationNucleotides: #Iterate each nucleotide
+			currentNuc = [] #A list for the current Nucleotides
 			if variationNucleotide not in currentNuc:
 				currentNuc.append(variationNucleotides[variationNucleotide])
 			if len(currentNuc) > 2: #Remove complex cases w/ more than 2 nucleotides at each site
 				del(variationNucleotide) # If len >2 delete the entry
 	#print variationNucleotides #Print out the dictionary
 	#Now finished creating the dictionary of the polymorphisms. Now iterate through it and do pairwise comparisons
-	allSeqCodons = getAllCodons(sequences)
-	allSeqAA = getAllAminoAcids(allSeqCodons)
-	synPoly = getSynonymousPolymorphisms(allSeqCodons)
-	nonSynPoly = getNonSynonymousPolymorphisms(allSeqAA)
+	allSeqCodons = getAllCodons(sequences) #Get the output of allSeqCodons
+	allSeqAA = getAllAminoAcids(allSeqCodons) #Get the output of allSeqAA
+	synPoly = getSynonymousPolymorphisms(allSeqCodons) #Get the output of Synpoly
+	nonSynPoly = getNonSynonymousPolymorphisms(allSeqAA) #Get the output of nonSynPoly
 	for basePolyIndex in variationNucleotides:
 		for testPolyIndex in variationNucleotides:
 			ldEquationR2 = None
@@ -358,9 +358,7 @@ def newCalcLinkageDisequilibrium(variation, sequences):
 						#print bigB
 						if testNuc != bigB:
 							littleB = testNuc
-					#print 'bigB Chosen %s, testNuc is %s. From %s' % (bigB, testNuc, variationNucleotides[testPolyIndex])
-				
-
+					#print 'bigB Chosen %s, testNuc is %s. From %s' % (bigB, testNuc, variationNucleotides[testPolyIndex])	
 			#Now work out some probabilities
 			basePolyIndexTotal = len(variationNucleotides[basePolyIndex])
 			testPolyIndexTotal = len(variationNucleotides[testPolyIndex])
@@ -370,12 +368,13 @@ def newCalcLinkageDisequilibrium(variation, sequences):
 			littleACount = variationNucleotides[basePolyIndex].count(littleA)
 			bigBCount = variationNucleotides[testPolyIndex].count(bigB)
 			littleBCount = variationNucleotides[testPolyIndex].count(littleB)
-			#print '%s %s %s %s' % (bigACount, littleACount, bigBCount, littleBCount)
+			#print '%s %s/%s %s %s/%s' % (bigACount, littleACount,basePolyIndexTotal, bigBCount, littleBCount, testPolyIndexTotal)
 			pBigA = float(bigACount)/float(basePolyIndexTotal)
 			pLittleA = float(littleACount)/float(basePolyIndexTotal)
 			pBigB = float(bigBCount)/float(testPolyIndexTotal)
 			pLittleB = float(littleBCount)/float(testPolyIndexTotal)
-			
+			if pBigA + pLittleA != 1 or pBigB + pLittleB != 1: #If they don't equal one then we're working with something which has more than one possible pLittleX allele, ignore these.
+				break
 			#Now moving onto the more complex 2 part probabilities
 			#Finding pAB
 			countAB = 0
@@ -447,24 +446,27 @@ def newCalcLinkageDisequilibrium(variation, sequences):
 						distanceAndLdSyn[str(abs(distanceBetween))] = [str(ldEquationR2)]
 					else:
 						distanceAndLdSyn[str(abs(distanceBetween))].append(str(ldEquationR2))
+					
 			elif synOrNonSyn == 'nonSyn':
-				#print 'doing the calc'
-			#Now do the calculation
-				ldEquationD = pAB - pBigA * pBigB
-			#print ldEquationD
-				ldEquationR2Bottom = pAB * pAb * paB * pab
-				#print ldEquationR2Bottom
+				#Now do the calculation
+				ldEquationD = float(pAB - (pBigA * pBigB))
+				ldEquationR2Bottom = float(pBigA * pLittleA * pBigB * pLittleB)
 				if ldEquationR2Bottom != 0:
-					ldEquationR2 = (ldEquationD**2)/ldEquationR2Bottom
+					ldEquationR2 = (ldEquationD**2.0) / ldEquationR2Bottom
+					#ldEquationR2 = (pAB - (pBigA * pBigB)**2.0) / (pBigA * pLittleA * pBigB * pLittleB)
 					#print '--- Below poly eq is: %s / %s = %s' % (str(ldEquationD), str(ldEquationR2Bottom), str(ldEquationR2))
-				#print ldEquationR2
-			#if(ldEquationR2 != None):
-			#	print '------------ %s to %s: A=%s a=%s B=%s b=%s' % (basePolyIndex, testPolyIndex, bigA, littleA, bigB, littleB)
-			#	print 'Base Seq ' + str(variationNucleotides[basePolyIndex])
-			#	print 'Test Seq ' + str(variationNucleotides[testPolyIndex])
-			#	print 'pA=%s pa=%s pB=%s pb=%s' % (pBigA, pLittleA, pBigB, pLittleB)
-			#	print 'pAB=%s pAb=%s paB=%s pab=%s' % (pAB, pAb, paB, pab)
-			#	print 'LD is ' + str(ldEquationR2)
+					#print ldEquationR2
+					#if(ldEquationR2 != None):
+					#	print '------------ %s to %s: A=%s a=%s B=%s b=%s' % (basePolyIndex, testPolyIndex, bigA, littleA, bigB, littleB)
+					#	print 'Base Seq ' + str(variationNucleotides[basePolyIndex])
+					#	print 'Test Seq ' + str(variationNucleotides[testPolyIndex])
+					#	print 'pA=%s pa=%s pB=%s pb=%s' % (pBigA, pLittleA, pBigB, pLittleB)
+					#	print 'pAB=%s pAb=%s paB=%s pab=%s' % (pAB, pAb, paB, pab)
+					#	print 'LD is ' + str(ldEquationR2)
+					if ldEquationR2 > 1:
+						print '----\nld = %s; \n pA=%s; \n pa=%s; \n pB=%s; \n pb=%s; \n pAB=%s; \n pAb=%s; \n paB=%s; \n pab=%s; \n d=%s; \n bottom=%s;' % (ldEquationR2, pBigA, pLittleA, pBigB, pLittleB, pAB, pAb, paB, pab, ldEquationD, ldEquationR2Bottom)
+						print '%s %s/%s %s %s/%s' % (bigACount, littleACount,basePolyIndexTotal, bigBCount, littleBCount, testPolyIndexTotal)
+						print 'base: %s test:%s' % (variationNucleotides[basePolyIndex], variationNucleotides[testPolyIndex])
 					try:
 						distanceAndLdNonSyn[str(abs(distanceBetween))]
 					except:
@@ -590,16 +592,23 @@ def iterateFolders(dir):
 	Then calls iterateFiles on each one of those folders'''
 	files = os.listdir(dir)
 	doneBacteria = []
+	totalNumBacteria = 0
 	for file in files:
 		if file[-3:] == 'pdf':
 			#pdfPath = '"' + dir + file + '"'
 			#dropboxUpload(pdfPath, '"/Biomedicine/Yr 3/FYP/Results for Adam/"')
 			doneBacteria.append(file[:-4])
+		else:
+			totalNumBacteria = totalNumBacteria + 1
 	#print 'Already done: ' + str(doneBacteria)
+
+	numToDo = totalNumBacteria - len(doneBacteria)
+	print 'Going to do %s bacteria. Done %s and total is %s' % (numToDo, len(doneBacteria), totalNumBacteria)
+	currentNumber = 0
 	for file in files:
-		
 		if file not in doneBacteria and file[-3:] != 'pdf':
-			print '----- ' + file.upper() + ' -----'
+			currentNumber = currentNumber + 1
+			print '----- ' + file.upper() + ' On file %s of %s ----- ' % (currentNumber, numToDo)
 			dataPath = dir + file + '/'
 			iterateFiles(dataPath, file)		
 	return
@@ -698,6 +707,22 @@ def iterateFiles(dir, bacteriaName):
 	
        	#synYPos = raw_input('Y Position of top text label --> ')
 	#nSynYPos = raw_input('Y Position of bottom text label --> ')
+	print ''
+	drawGraph(distanceValuesSyn, ldValuesSyn, distanceValuesNonSyn, ldValuesNonSyn, bacteriaName)
+	print 'Saving data to %s...' % ('/home/robert/FYP/Sequence Data/' + bacteriaName + '/'),
+	storeData(distanceValuesSyn, ldValuesSyn, distanceValuesNonSyn, ldValuesNonSyn, bacteriaName)
+	print ' Done.'
+	print 'Uploading to dropbox...',
+	pdfPath = '"' + dir[:-1] + '.pdf' + '"'
+	dropboxUpload(pdfPath, '"/Biomedicine/Yr 3/FYP/Results for Adam/"')
+	print ' Done.'
+	#print 'Saving to usb...',
+	#os.sys('cp /home/robert/FYP/Sequence Data/' + bacteriaName + '.pdf /media/robert/ROBUSB/')
+	#print ' Done.'
+	return ((distanceValuesSyn, ldValuesSyn), (distanceValuesNonSyn, ldValuesNonSyn))
+		
+def drawGraph(distanceValuesSyn, ldValuesSyn, distanceValuesNonSyn, ldValuesNonSyn, bacteriaName):
+	'''Takes all the info required to draw a graph for the results, draws it and saves it to the specified path'''
 	plt.plot(distanceValuesSyn, ldValuesSyn, 'ro')
 	plt.plot(distanceValuesNonSyn, ldValuesNonSyn, 'bo')
 	plt.ylabel('Linkage Disequilibrium')
@@ -708,7 +733,7 @@ def iterateFiles(dir, bacteriaName):
 	#	plt.axis(axesScale)
 	plotAxes = plt.axis()
 	#print '--------------------------------------------- ' + str(plotAxes)
-	time.sleep(3)
+	#time.sleep(3)
 	xPos = 0.6*plotAxes[1]
 	synYPos = 0.9*plotAxes[3]
 	nSynYPos = 0.8*plotAxes[3]
@@ -716,15 +741,30 @@ def iterateFiles(dir, bacteriaName):
 	plt.text(xPos, nSynYPos, 'Non Synonymous', color='b')
 	plt.title(bacteriaName)
 	plt.suptitle('A graph of Linkage Disequilibrium Against Loci Distance')
-	print 'Writing graph file...',
-	plt.savefig(bacteriaName + '.pdf')
+	print ''
+	print 'Writing graph file to %s%s%s...' % ('/home/robert/FYP/Sequence Data/', bacteriaName, '.pdf'),
+	plt.savefig('/home/robert/FYP/Sequence Data/' + bacteriaName + '.pdf')
 	print ' Done.'
-	print 'Uploading to dropbox...'
-	pdfPath = '"' + dir[:-1] + '.pdf' + '"'
-	dropboxUpload(pdfPath, '"/Biomedicine/Yr 3/FYP/Results for Adam/"')
 	
-	return ((distanceValuesSyn, ldValuesSyn), (distanceValuesNonSyn, ldValuesNonSyn))
-		
+	return '/home/robert/FYP/Sequence Data/' + bacteriaName + '.pdf'
+
+def storeData(distanceValuesSyn, ldValuesSyn, distanceValuesNonSyn, ldValuesNonSyn, bacteriaName):
+	'''Takes all the info that needs to be stored plus the bacteria name and writes the 
+	lists to individual files in the bacteriaName folder'''
+	f = open('/home/robert/FYP/Sequence Data/' + bacteriaName + '/distanceValuesSyn.txt', 'w')
+	f.write(str(distanceValuesSyn))
+	f.close()
+	f = open('/home/robert/FYP/Sequence Data/' + bacteriaName + '/ldValuesSyn.txt', 'w')
+	f.write(str(ldValuesSyn))
+	f.close()
+	f = open('/home/robert/FYP/Sequence Data/' + bacteriaName + '/distanceValuesNonSyn.txt', 'w')
+	f.write(str(distanceValuesNonSyn))
+	f.close()
+	f = open('/home/robert/FYP/Sequence Data/' + bacteriaName + '/ldValuesNonSyn.txt', 'w')
+	f.write(str(ldValuesNonSyn))
+	f.close()
+	return 
+	
 		
 def chooseSequenceData():
 	'''Prompts the user to select a bacterium from a list of folder in a location on the
@@ -798,13 +838,19 @@ def main():
 	#print getVariation(sequences)
 	#print seqNuc
 	#print seqHeader
+	#storeData(['distanceValuesSyn'], ['ldValuesSyn'], ['distanceValuesNonSyn'], ['ldValuesNonSyn'], 'Chlamydia psittaci')
+	#time.sleep(10)
 	if '-s' in sys.argv:
 		if os.geteuid() != 0:
 			exit("You need to have root privileges to run this script and shutdown after.\nPlease try again, this time using 'sudo'.")
-	iterateFolders('/home/robert/FYP/Sequence Data/')
+	if '-r' in sys.argv:
+		iterateFolders('/home/robert/FYP/Sequence Data/')
+	else:
+		bacteriaName = 'Chlamydia psittaci'
+		iterateFiles('/home/robert/FYP/Sequence Data/' + bacteriaName + '/', bacteriaName)
 	if '-s' in sys.argv:
-		os.system('sudo shutdown -h now')
-		os.system('sudo shutdown -h 0')
+		os.system('sudo shutdown -h 60')
+		os.system('sudo shutdown -h 60')
 	#if sys.argv[1]:
 	#	bacteriaName = sys.argv[1]
 	#else:
