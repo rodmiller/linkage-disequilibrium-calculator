@@ -1229,7 +1229,10 @@ def main():
 		else:
 			iterateFolders('/home/robert/FYP/Sequence Data/goodBacteria/', 'png')
 	else:
-		bacteriaName = 'Alteromonas macleodii (All Strains)'
+		if '-' not in sys.argv[-1]:
+			bacteriaName = sys.argv[-1]
+		else:
+			bacteriaName = 'Alteromonas macleodii (All Strains)'
 		dataPath = '/home/robert/FYP/Sequence Data/goodBacteria/' + bacteriaName + '/'
 		bacteriaFiles = os.listdir(dataPath)
 		if 'distanceValuesNonSyn.txt' in bacteriaFiles and 'distanceValuesSyn.txt' in bacteriaFiles and 'ldValuesNonSyn.txt' in bacteriaFiles and 'ldValuesSyn.txt' in bacteriaFiles and '-forcecalc' not in sys.argv:
