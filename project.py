@@ -1016,7 +1016,7 @@ def drawAverageGraph(distanceValuesSyn, ldValuesSyn, distanceValuesNonSyn, ldVal
 	#plt.show()
 	#plt.savefig('/home/robert/FYP/Sequence Data/goodBacteria/Average ' + bacteriaName + '.' + 'pdf')
 	if rangeNumber > 0:
-		plt.savefig('/home/robert/FYP/Sequence Data/goodBacteria/Average ' + rangeNumber + 'bp ' + bacteriaName + '.' + 'png')
+		plt.savefig('/home/robert/FYP/Sequence Data/goodBacteria/Average ' + str(rangeNumber) + 'bp ' + bacteriaName + '.' + 'png')
 	elif rangeNumber == 0:
 		plt.savefig('/home/robert/FYP/Sequence Data/goodBacteria/Average ' + bacteriaName + '.' + 'png')
 		print 'Storing average data...'
