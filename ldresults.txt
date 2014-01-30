@@ -1,6 +1,1 @@
------------ File is: ortholog_000150.nt_ali.Bifidobacteriumanimalissubsplactis.fasta and index is: 1
-Base Poly is: ['G', 'T']
-Test Poly is: ['G', 'G']
------------ File is: ortholog_000150.nt_ali.Bifidobacteriumanimalissubsplactis.fasta and index is: 1
-Base Poly is: ['G', 'T']
-Test Poly is: ['G', 'G']
+
