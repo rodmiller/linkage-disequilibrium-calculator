@@ -1,33 +1,5 @@
 #!/usr/bin/python
 #coding: utf-8
-#
-#UP TO STEP 4 IN EMAIL..
-#
-'''
-Y1. Take a file single file and read the first sequence (note each file has a header).
-
-Y2. Take that sequence and count the numbers of G, C, A and T (note that dashes are gaps - these are either insertion or deletion mutations).
-
-Y3. Count the number of each amino acid in the sequence (hint: use a dictionary)
-
-Y4. Now read in all the sequences in a file (putting them into a list) and count the number of sites which show variation across the strains. E.g. if we had the folliowing sequences
-
-seq1   TCTTGA
-seq2   TCTTGC
-seq3   TATTGA
-
-we would find that two sites were variable or "polymorphic" across the strains.
-
-5. Calculate the linkage disequilibrium (LD) between all pairs of polymorphic sites. To calculate LD we will use the method of Hill and Robertson, r^2.
-
-r^2 = D^2 / (P(AB) P(aB) P(Ab) P(ab))
-
-where D = P(AB) - P(A)P(B)
-
-and P(AB)..etc are the frequencies of the haplotypes (chromosomes) carrying the A and B alleles, and P(A)...etc are the frequencies of the A allele at the A locus. I can describe this in more detail if you need.
-
-5. Finally we have to divide the polymorphisms as to whether they are synonymous or non-synonymous (non-synonymous mutations change an amino acid, synonymous ones do not). We will want to look at patterns of LD for synonymous and non-synonymnous separately.
-'''
 
 import os #For looping through files in a dir and determining system os for file to load
 import csv #For writing to csv files in order to make a graph in calc
@@ -1256,21 +1228,7 @@ def main():
 	if '-s' in sys.argv:
 		os.system('sudo shutdown -h 60')
 		os.system('sudo shutdown -h 60')
-	#if sys.argv[1]:
-	#	bacteriaName = sys.argv[1]
-	#else:
-	#	bacteriaName = raw_input('Bacteria Name: ')
-	#iterateFiles('/home/robert/FYP/Sequence Data/goodBacteria/' + bacteriaName + '/', bacteriaName) #Calculates for all the files in the chosen folder
-	#ld = newCalcLinkageDisequilibrium(variation, sequences)
-	#print sequences0
-	#distanceValuesSyn = ld[0][0]
-	#ldValuesSyn = ld[0][1]
-	#distanceValuesNonSyn = ld[1][0]
-	#ldValuesNonSyn = ld[1][1]
-	
-	#plt.acorr( #Add some correlation somehow!)
-	#plt.show()
-	
+
 	
 if __name__ == '__main__':
 	main()
